@@ -1,8 +1,15 @@
 
+## afs15 [0.0.2] - 2024-02-27 &ensp; \
+
+- criar esqueleto do jogo
+- criar physics entity
+- desenhar o player como imagem na tela
+- demonstracao do sistema de colisao 
+
+
 ## afs15 [0.0.2] - 2024-02-26 &ensp; \
 
 - mudar para 60 fps
-
 
 
 ## afs15 [0.0.1] - 2024-02-26 &ensp; \
