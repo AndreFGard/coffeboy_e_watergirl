@@ -1,3 +1,6 @@
+import pygame
+import sys
+
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
 
 class Game:
@@ -10,25 +13,26 @@ class Game:
         self.negative = 1 
         
     def run(self):
-        import pygame
-
+    
         pygame.init()
+        pygame.display.set_caption("coffeboy e watergirl")
 
         screen = pygame.display.set_mode((self.width, self.height))
         #display = pygame.Surface((700, 700)) ???
-        screen.fill((200,200,255))
-        keep_running = True
+        clock = pygame.time.Clock()
+
         las_pressed_pos = tuple()
         player_x, player_y = self.width // 2, self.height // 2
 
-        while keep_running:
-            screen.fill((200,200,255))
 
-            pygame.time.delay(100)
+
+        while True:
+            screen.fill((200,200,255))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    keep_running = False
+                    pygame.quitt()
+                    sys.exit()
 
                 if event.type == pygame.MOUSEMOTION:
                     mouse_pos = pygame.mouse.get_pos()
@@ -61,7 +65,10 @@ class Game:
 
             pygame.draw.rect(screen, (255,0,0), (player_x, player_y, 10, 16))
 
+            #isto aqui é o que desenha na tela as alterações que fazemos a cada
+            # iter do loop
             pygame.display.update()
+            clock.tick(60)
 
 
 
