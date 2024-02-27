@@ -1,5 +1,5 @@
 import pygame
-from modules.utils import Utils
+from modules.utils import sum_vectors
 
 
 class PhysicsEntity:
@@ -12,7 +12,7 @@ class PhysicsEntity:
 
     def update(self, movement=(0,0)):
         """moves the player"""
-        frame_movement = Utils.sum_vectors(movement,self.velocity)
+        frame_movement = sum_vectors(movement,self.velocity)
         self.pos[0] += frame_movement[0]
         self.pos[1] += frame_movement[1]
 
