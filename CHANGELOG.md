@@ -1,5 +1,9 @@
 
-## afs15 [0.0.2] - 2024-02-27 &ensp; \
+## afs15 [0.0.4] - 2024-02-27 &ensp; \
+
+- movimentacao basica do personagem
+
+## afs15 [0.0.3] - 2024-02-27 &ensp; \
 
 - criar esqueleto do jogo
 - criar physics entity
