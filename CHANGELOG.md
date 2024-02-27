@@ -1,3 +1,9 @@
+## afs15 [0.0.7] - 2024-02-27 &ensp; \
+ - colisao e física basicas
+ - movimentacao da camera
+
+
+
 ## afs15 [0.0.6] - 2024-02-27 &ensp; \
  - tilemap básico 
  - remoção das demonstrações do uso básico do pygame

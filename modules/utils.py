@@ -6,6 +6,10 @@ def sum_vectors(v1:tuple, v2:tuple) -> tuple:
     if len(v1) == 2:
         return v1[0] + v2[0], v1[1] + v2[1]
 
+def k_vector(k, v):
+    """multiplica o vetor por um escalar"""
+    return (k*v[0], k*v[1])
+
 def load_image(path):
     """Carrega a imagem e seta o seu background como transparente usando o set_colorkey"""
     img = pygame.image.load(BASE_IMG_PATH + path).convert()

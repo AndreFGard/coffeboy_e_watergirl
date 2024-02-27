@@ -33,7 +33,9 @@ class Game(modules.input.Input):
         print(self.assets)
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
         self.tilemap = Tilemap(self, tile_size=16)
-
+        
+        #esse é o offset da camera
+        self.scroll = [0,0]
 
 
     def run(self):
@@ -42,9 +44,16 @@ class Game(modules.input.Input):
         while True:
             self.display.fill((200,200,255))
 
-            self.tilemap.render(self.display)
-            self.player.update((self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display)
+            #dividir por 2 pra que fique no meio
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() // 2 - self.scroll[0]) // 10
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() // 2 - self.scroll[1]) // 10
+
+
+            self.tilemap.render(self.display, offset=self.scroll)
+            self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
+            self.player.render(self.display, offset=self.scroll)
+
+            print(self.tilemap.physics_rects_around(self.player.pos))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -55,11 +64,15 @@ class Game(modules.input.Input):
                         self.movement[0] = True
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = True
+                    if event.key == pygame.K_UP:
+                        self.player.velocity[1] = -3
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
+                
+                    
 
             pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
 
