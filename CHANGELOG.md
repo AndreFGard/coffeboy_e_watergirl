@@ -1,3 +1,5 @@
+## afs15 [0.0.5] - 2024-02-27 &ensp; \
+- adicionar os assets e sprites
 
 ## afs15 [0.0.4] - 2024-02-27 &ensp; \
 
