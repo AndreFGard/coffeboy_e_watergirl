@@ -1,3 +1,8 @@
+## afs15 [0.0.6] - 2024-02-27 &ensp; \
+ - tilemap básico 
+ - remoção das demonstrações do uso básico do pygame
+ - adicionar utils.py
+
 ## afs15 [0.0.5] - 2024-02-27 &ensp; \
 - adicionar os assets e sprites
 
