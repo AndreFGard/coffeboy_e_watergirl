@@ -55,6 +55,10 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
+            # Renderizar os itens colecionáveis
+            for item in self.itens_colecionaveis:
+                if not item.coletado:
+                    item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     self.inventario.append(item)

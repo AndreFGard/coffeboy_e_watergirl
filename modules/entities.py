@@ -64,18 +64,18 @@ class PhysicsEntity:
                      sum_vectors(k_vector(-1, offset), self.pos))
         
 class ItemColecionavel(PhysicsEntity):
-    def _init_(self, game, tipo, posicao, tamanho, pontuacao=10):
-        super()._init_(game, tipo, posicao, tamanho)
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
         self.coletado = False
 
-    def atualizar(self, tilemap: Tilemap, movimento=(0, 0)):
+    def update(self, tilemap: Tilemap, movement=(0, 0)):
         """Move o item colecionável"""
-        super().atualizar(tilemap, movimento)
+        super().update(tilemap, movement)
 
         # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
 
-    def renderizar(self, superficie: pygame.Surface, deslocamento):
+    def render(self, superficie: pygame.Surface, deslocamento):
         """Renderiza o item colecionável"""
-        pygame.draw.rect(superficie, (255, 255, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
+        pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
         # Você pode personalizar a renderização do item colecionável conforme necessário
