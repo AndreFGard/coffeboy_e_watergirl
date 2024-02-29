@@ -33,8 +33,10 @@ class Game(modules.input.Input):
         print(self.assets)
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
         self.tilemap = Tilemap(self, tile_size=16)
-        self.collectable = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
-        self.collectable_coletado = False
+        item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
+        item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
+        self.itens_colecionaveis = [item1,item2]
+        self.inventario = []
         #esse é o offset da camera
         self.scroll = [0,0]
 
@@ -53,13 +55,13 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
-            #renderiza o item coletavel se ele ainda nao foi coletado
-            if not self.collectable_coletado:
-                self.collectable.render(self.display, offset=self.scroll)
-
-            # Detectar colisão entre o jogador e o item colecionável
-            if not self.collectable_coletado and self.player.rect().colliderect(self.collectable.rect()):
-                self.collectable_coletado = True
+            for item in self.itens_colecionaveis:
+                if not item.coletado and self.player.rect().colliderect(item.rect()):
+                    self.inventario.append(item)
+                    item.coletado = True
+                    # Remova o item da lista de itens colecionáveis
+                    self.itens_colecionaveis.remove(item)
+                    break  # Sair do loop assim que um item for coletado
             
 
 

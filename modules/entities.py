@@ -67,7 +67,7 @@ class ItemColecionavel(PhysicsEntity):
     def _init_(self, game, tipo, posicao, tamanho, pontuacao=10):
         super()._init_(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
-        self.coletato = False
+        self.coletado = False
 
     def atualizar(self, tilemap: Tilemap, movimento=(0, 0)):
         """Move o item colecionável"""
