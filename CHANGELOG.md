@@ -1,4 +1,8 @@
-## afs15 [0.0.7] - 2024-02-27 &ensp; \
+## \<afs15\> [0.0.8] - 2024-02-28 &ensp;
+  - suporte a animacoes adicionado à PhysicsEngine
+  - faltou documentar
+
+## afs15 [0.0.7] - 2024-02-28 &ensp; \
  - colisao como o tilemap e física basicas
  - movimentacao da camera
  - background

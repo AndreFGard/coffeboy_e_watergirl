@@ -1,8 +1,8 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity
-from modules.utils import load_image, load_images
+from modules.entities import PhysicsEntity, Player
+from modules.utils import load_image, load_images, Animation
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
 
@@ -31,9 +31,15 @@ class Game(modules.input.Input):
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
             'player': load_image('entities/player/idle/00.png'),
-            'background': load_image("Background2.png")}
+            'background': load_image("Background2.png"),
+            'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
+            'player/run': Animation(load_images('entities/player/run'), img_dur=4),
+            'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
+            'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4)
+            }
         #print(self.assets)
-        self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
+        self.player = Player(self, (50, 50), (8, 15))
         self.tilemap = Tilemap(self, tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         #esse é o offset da camera
