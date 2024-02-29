@@ -2,7 +2,7 @@ import pygame
 import sys
 import modules.input
 from modules.entities import PhysicsEntity, Player, ItemColecionavel
-from modules.utils import load_image, load_images, Animation
+from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
 
@@ -36,11 +36,13 @@ class Game(modules.input.Input):
             'player/run': Animation(load_images('entities/player/run'), img_dur=4),
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4)
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
+            'colecionavel/idle': load_image('entities/player/idle/00.png'),
+
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), (8, 15))
-        self.tilemap = Tilemap(self, map_filename="data/maps/1.json", tile_size=16)
+        self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
         item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
