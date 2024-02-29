@@ -129,8 +129,6 @@ class ItemColecionavel(PhysicsEntity):
 
         # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
 
-    def render(self, superficie: pygame.Surface, deslocamento):
-        """Renderiza o item colecionável"""
-        pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
+
         # Você pode personalizar a renderização do item colecionável conforme necessário
 

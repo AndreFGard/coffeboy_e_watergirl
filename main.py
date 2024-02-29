@@ -37,7 +37,7 @@ class Game(modules.input.Input):
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'colecionavel/idle': load_image('entities/player/idle/00.png'),
+            'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
 
             }
         #print(self.assets)
