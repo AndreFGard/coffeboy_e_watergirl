@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity
+from modules.entities import PhysicsEntity, ItemColecionavel
 from modules.utils import load_image, load_images
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -33,7 +33,8 @@ class Game(modules.input.Input):
         print(self.assets)
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
         self.tilemap = Tilemap(self, tile_size=16)
-        
+        self.collectable = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
+        self.collectable_coletado = False
         #esse é o offset da camera
         self.scroll = [0,0]
 
@@ -52,6 +53,15 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
+            #renderiza o item coletavel se ele ainda nao foi coletado
+            if not self.collectable_coletado:
+                self.collectable.render(self.display, offset=self.scroll)
+
+            # Detectar colisão entre o jogador e o item colecionável
+            if not self.collectable_coletado and self.player.rect().colliderect(self.collectable.rect()):
+                self.collectable_coletado = True
+            
+
 
             print(self.tilemap.physics_rects_around(self.player.pos))
 
