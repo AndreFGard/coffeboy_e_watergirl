@@ -1,3 +1,8 @@
+## \<afs15\> [0.0.9] - 2024-02-29 &ensp;
+- fazer o tilemap ler o mapa a partir de um arquivo
+- remover prints de debug
+
+
 ## \<afs15\> [0.0.8] - 2024-02-28 &ensp;
   - suporte a animacoes adicionado à PhysicsEngine
   - faltou documentar
