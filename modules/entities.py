@@ -110,10 +110,8 @@ class Player(PhysicsEntity):
             self.air_time = 0
 
         if self.air_time > 4:
-            print("jump")
             self.set_action('jump')
         elif movement[0] != 0:
-            print("run")
             self.set_action('run')
         else:
             self.set_action('idle')
