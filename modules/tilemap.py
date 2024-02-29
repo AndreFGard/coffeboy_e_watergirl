@@ -26,6 +26,7 @@ class Tilemap:
             with open(map_filename, "r") as map_F:
                 raiz = json.loads(map_F.read())
                 tilemap_arquivo = raiz['tilemap']
+                #mudar esta linha pra ler o tile_size do arquivo
                 tile_size = raiz['tile_size']
                 offgrid_tilemap = raiz['offgrid']
 
@@ -38,7 +39,15 @@ class Tilemap:
             for i in range(10):
                 self.tilemap[str(3 + i) + ";10"] = {'type': 'grass', 'variant': 1, 'pos': (3 + i, 10)}
                 self.tilemap["10;" + str(5 + i)] = {'type': 'stone', 'variant': 1, 'pos': (10, 5 + i)}       
-                
+
+    def __dump_map__(self):
+        newmap_filename = "newmap.json"
+        raiz = {}
+        raiz['tile_size'] = self.tile_size
+        raiz['tilemap'] = self.tilemap
+        raiz['offgrid'] = []
+        with open(newmap_filename, "w") as file:
+            json.dump(raiz, file)
 
     def neighbor_tiles(self, pos):
         """Retorna uma lista com no máximo todos os 9 blocos ao redor do personagem, se existirem"""
