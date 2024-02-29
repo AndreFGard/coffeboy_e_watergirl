@@ -40,16 +40,27 @@ class Tilemap:
                 rects.append(pygame.Rect(*pos_in_pixels(tile['pos']), self.tile_size, self.tile_size ))
         return rects
     
-    def render(self, surface, offset=(0,0)):
+    def render(self, surface: pygame.Surface, offset=(0,0)):
         
         for tile in self.offgrid_tiles:
             #interpretaremos a posicao como PIXEL, nao como lugar na grid
             surface.blit(self.game.assets[tile['type']][tile['variant']],sum_vectors( k_vector(-1, offset), tile['pos']) )
 
+        start_screen_x, end_screen_x = offset[0]//self.tile_size, (offset[0] + surface.get_width()) // self.tile_size
+        #start_screen_y, end_screen_y = offset[1]//self.tile_size, (offset[1] + surface.get_height()) // self.tile_size
+
+
         for loc in self.tilemap:
-            tile = self.tilemap[loc]
+            
             #pega a lista de assets daquele tipo, acessa o indice (variant) dela e desenha
-            surface.blit(self.game.assets[tile['type']][tile['variant']],
-                         sum_vectors(k_vector(-1, offset), 
-                         tuple(map(lambda x: x*self.tile_size, tile['pos'])))
+            #apenas os tiles que estao dentro da tela (entre o inicio e o final dela)
+            #nao é a melhor otimizacoa, no youtube deve ter coisa melhor
+            tile = self.tilemap[loc]
+            tile_x, tile_y = tile['pos'] 
+            if tile_x >= start_screen_x  and tile_x <= end_screen_x:
+                surface.blit(self.game.assets[tile['type']][tile['variant']],
+                            sum_vectors(k_vector(-1, offset), 
+                            tuple(map(lambda x: x*self.tile_size, tile['pos'])))
         )
+
+

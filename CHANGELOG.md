@@ -1,6 +1,8 @@
 ## afs15 [0.0.7] - 2024-02-27 &ensp; \
- - colisao e física basicas
+ - colisao como o tilemap e física basicas
  - movimentacao da camera
+ - background
+ - otimizacao basica do tilemap
 
 
 
