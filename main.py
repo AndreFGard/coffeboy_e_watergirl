@@ -1,113 +1,116 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity
+from modules.entities import PhysicsEntity, Player, ItemColecionavel
+from modules.utils import load_image, load_images, Animation, subtract_vectors
+from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
 
 class Game(modules.input.Input):
     def __init__(self):
         modules.input.Input.__init__(self)
         self.width = 1280
-        self.height = 720
-        self.velocity = 5 
-        self.jumpcount = 10
-        self.isJumping = False
-        self.negative = 1 
+        self.height = 960
 
-        self.assets ={'player': 'data/images/entities/player/idle/00.png'}
-
-    
         pygame.init()
         pygame.display.set_caption("coffeboy e watergirl")
 
         self.screen = pygame.display.set_mode((self.width, self.height))
-        self.las_pressed_pos = tuple()
+        #gera uma imagem. Pra aumentar o tamanho das coisas na tela,
+        #renderizamos nela e depois escalamos pra screen 
+        #é no display que gravaremos as coisas
+        self.display = pygame.Surface((320, 240))
+
         self.player_x, self.player_y = self.width // 2, self.height // 2
-    
-        #carregar a imagem numa surface
-        self.img = pygame.image.load('data/images/clouds/cloud_1.png')
-        #set_colorkey diz que cor da imagem é o seu background, o qual deve ser transparente
-        self.img.set_colorkey((0,0,0))
-        self.img_pos = [160, 260]
-        self.collision_area = pygame.Rect(50,50,300,50)
-
-
         self.movement = [False, False]
 
-        #ignorar isto
-        self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
+        #loads the images as a list of assets containing every variant of that type
+        self.assets = {
+            'decor': load_images('tiles/decor'),
+            'grass': load_images('tiles/grass'),
+            'large_decor': load_images('tiles/large_decor'),
+            'stone': load_images('tiles/stone'),
+            'player': load_image('entities/player/idle/00.png'),
+            'background': load_image("Background2.png"),
+            'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
+            'player/run': Animation(load_images('entities/player/run'), img_dur=4),
+            'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
+            'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
+            'colecionavel/idle': load_image('entities/player/idle/00.png'),
+
+            }
+        #print(self.assets)
+        self.player = Player(self, (50, 50), (8, 15))
+        self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
+        self.back = pygame.image.load("data/images/clouds/cloud_1.png")
+        item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
+        item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
+        self.itens_colecionaveis = [item1,item2]
+        self.inventario = []
+
+        #esse é o offset da camera
+        self.scroll = [0,0]
+
+        #preparar o background
+        self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
+
 
     def run(self):
-
-        #display = pygame.Surface((700, 700)) ???
         clock = pygame.time.Clock()
 
-   
         while True:
-            self.screen.fill((200,200,255))
+            #self.display.fill((200,200,255))
+            self.display.blit(self.assets['background'], (0,0))
 
 
-            #rect criado a partir imagem
-            img_r = pygame.Rect(*self.img_pos, *self.img.get_size())
-            if img_r.colliderect(self.collision_area):
-                pygame.draw.rect(self.screen, (0, 100, 255), self.collision_area)
-            else:
-                pygame.draw.rect(self.screen, (100, 100, 255), self.collision_area)
+            #dividir por 2 pra que fique no meio
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() // 2 - self.scroll[0]) // 10
+            self.scroll[1] += (self.player.rect().centery - self.display.get_height() // 2 - self.scroll[1]) // 10
 
-            # a blit desenha uma imagem sobre uma outra. No caso, sobre a imagem que
-            # renderizamos como janela do jogo
-            self.img_pos[1] += self.movement[1] - self.movement[0]
-            self.screen.blit(self.img, self.img_pos)
+            self.tilemap.render(self.display, offset=self.scroll)
+            self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
+            self.player.render(self.display, offset=self.scroll)
+            # Renderizar os itens colecionáveis
+            for item in self.itens_colecionaveis:
+                if not item.coletado:
+                    item.render(self.display, self.scroll)
+            for item in self.itens_colecionaveis:
+                if not item.coletado and self.player.rect().colliderect(item.rect()):
+                    self.inventario.append(item)
+                    item.coletado = True
+                    # Remova o item da lista de itens colecionáveis
+                    self.itens_colecionaveis.remove(item)
+                    break  # Sair do loop assim que um item for coletado
+            
+
+
+            #print(self.tilemap.physics_rects_around(self.player.pos))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quitt()
+                    pygame.quit()
                     sys.exit()
-
-                elif event.type == pygame.MOUSEMOTION:
-                    mouse_pos = pygame.mouse.get_pos()
-                    if not self.las_pressed_pos: self.las_pressed_pos = mouse_pos
-                    if distance(self.las_pressed_pos, mouse_pos) > 100:
-                        pygame.draw.circle(self.screen, (240, 0, 0),mouse_pos, 20, 5)
-                        self.las_pressed_pos = mouse_pos
-
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
                         self.movement[0] = True
-                    if event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_RIGHT:
                         self.movement[1] = True
-
-                elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_UP:
+                        self.player.velocity[1] = -3
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
                         self.movement[0] = False
-                    if event.key == pygame.K_DOWN:
-                        self.movement[1] = False          
+                    if event.key == pygame.K_RIGHT:
+                        self.movement[1] = False
+                
+                    
 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
-                self.player_x -= self.velocity
-            if keys[pygame.K_DOWN]:
-                self.player_y += self.velocity            
-        
-            if keys[pygame.K_SPACE]:
-                self.isJumping = True
+            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
 
-            if self.isJumping:
-                if self.jumpcount >= -10:
-                    if self.jumpcount < 0:
-                        self.negative = -1
-                    self.player_y -= (self.jumpcount ** 2 ) * self.negative
-                    self.jumpcount -= 1 
-                else:
-                    self.isJumping = False
-                    self.jumpcount = 10
-                    self.negative = 1
-
-
-            pygame.draw.rect(self.screen, (255,0,0), (self.player_x, self.player_y, 10, 16))
-
-            #isto aqui é o que desenha na tela as alterações que fazemos a cada
-            # iter do loop
+            # isto aqui é o que escala o display pra screen (A tela de vdd)
+            # e escreve na tela as alteracoes que fizemos, a cada iter
+            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))
             pygame.display.update()
             clock.tick(60)
 
