@@ -5,13 +5,15 @@ from modules.entities import PhysicsEntity, Player
 from modules.utils import load_image, load_images, Animation
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
+from modules.hud import Item, InventorySlot, Inventory
 
 class Game(modules.input.Input):
     def __init__(self):
         modules.input.Input.__init__(self)
         self.width = 1280
         self.height = 960
-
+        self.is_fullscreen = False
+    
         pygame.init()
         pygame.display.set_caption("coffeboy e watergirl")
 
@@ -47,12 +49,25 @@ class Game(modules.input.Input):
 
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
+        
+    
+    def toggle_fullscreen(self):
+        # Alterna entre o modo de tela cheia e o modo de janela
+        self.is_fullscreen = not self.is_fullscreen
 
-
+        if self.is_fullscreen:
+            self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+        else:
+            self.screen = pygame.display.set_mode((self.width, self.height))
+            
+            
     def run(self):
         clock = pygame.time.Clock()
 
         while True:
+            self.draw_invent()  # mostra o inventário na tela
+            
+            
             #self.display.fill((200,200,255))
             self.display.blit(self.assets['background'], (0,0))
 
@@ -83,6 +98,10 @@ class Game(modules.input.Input):
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
+                        
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_m or event.key == pygame.K_ESCAPE:
+                        self.toggle_fullscreen()
                 
                     
 
@@ -95,7 +114,22 @@ class Game(modules.input.Input):
             clock.tick(60)
 
 
+    def draw_invent(self):
+    # Outros desenhos, atualizações, etc.
+        item1 = Item("Grão de Café", "./data/images/inventory/coffee-beans.png")
+        slot1 = InventorySlot(100, 800)
+        slot2 = InventorySlot(200, 800)
+        slot3 = InventorySlot(300, 800)
+        inventory = Inventory(3)
+        inventory.add_slot(slot1)
+        inventory.add_slot(slot2)
+        inventory.add_slot(slot3)
+        inventory.add_item_to_slot(item1, 0)
+        
+        Inventory.draw_inventory(self, inventory)
 
+        # Atualiza a tela
+        pygame.display.flip()
 
 
 
