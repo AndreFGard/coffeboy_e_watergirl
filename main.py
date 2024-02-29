@@ -18,6 +18,7 @@ class Game(modules.input.Input):
         self.screen = pygame.display.set_mode((self.width, self.height))
         #gera uma imagem. Pra aumentar o tamanho das coisas na tela,
         #renderizamos nela e depois escalamos pra screen 
+        #é no display que gravaremos as coisas
         self.display = pygame.Surface((320, 240))
 
         self.player_x, self.player_y = self.width // 2, self.height // 2
@@ -29,20 +30,26 @@ class Game(modules.input.Input):
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
-            'player': load_image('entities/player/idle/00.png')}
-        print(self.assets)
+            'player': load_image('entities/player/idle/00.png'),
+            'background': load_image("Background2.png")}
+        #print(self.assets)
         self.player = PhysicsEntity(self, 'player', (50, 50), (8, 15))
         self.tilemap = Tilemap(self, tile_size=16)
-        
+        self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         #esse é o offset da camera
         self.scroll = [0,0]
+
+        #preparar o background
+        self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
 
 
     def run(self):
         clock = pygame.time.Clock()
 
         while True:
-            self.display.fill((200,200,255))
+            #self.display.fill((200,200,255))
+            self.display.blit(self.assets['background'], (0,0))
+
 
             #dividir por 2 pra que fique no meio
             self.scroll[0] += (self.player.rect().centerx - self.display.get_width() // 2 - self.scroll[0]) // 10
@@ -53,7 +60,7 @@ class Game(modules.input.Input):
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
 
-            print(self.tilemap.physics_rects_around(self.player.pos))
+            #print(self.tilemap.physics_rects_around(self.player.pos))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
