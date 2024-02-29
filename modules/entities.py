@@ -115,3 +115,22 @@ class Player(PhysicsEntity):
             self.set_action('run')
         else:
             self.set_action('idle')
+
+        
+class ItemColecionavel(PhysicsEntity):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
+        self.pontuacao = pontuacao
+        self.coletado = False
+
+    def update(self, tilemap: Tilemap, movement=(0, 0)):
+        """Move o item colecionável"""
+        super().update(tilemap, movement)
+
+        # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
+
+    def render(self, superficie: pygame.Surface, deslocamento):
+        """Renderiza o item colecionável"""
+        pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
+        # Você pode personalizar a renderização do item colecionável conforme necessário
+

@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player
+from modules.entities import PhysicsEntity, Player, ItemColecionavel
 from modules.utils import load_image, load_images, Animation
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -42,6 +42,11 @@ class Game(modules.input.Input):
         self.player = Player(self, (50, 50), (8, 15))
         self.tilemap = Tilemap(self, map_filename="data/maps/1.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
+        item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
+        item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
+        self.itens_colecionaveis = [item1,item2]
+        self.inventario = []
+
         #esse é o offset da camera
         self.scroll = [0,0]
 
@@ -64,6 +69,19 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
+            # Renderizar os itens colecionáveis
+            for item in self.itens_colecionaveis:
+                if not item.coletado:
+                    item.render(self.display, self.scroll)
+            for item in self.itens_colecionaveis:
+                if not item.coletado and self.player.rect().colliderect(item.rect()):
+                    self.inventario.append(item)
+                    item.coletado = True
+                    # Remova o item da lista de itens colecionáveis
+                    self.itens_colecionaveis.remove(item)
+                    break  # Sair do loop assim que um item for coletado
+            
+
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
 
