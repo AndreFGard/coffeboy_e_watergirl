@@ -1,7 +1,8 @@
+## \<afs15\> [0.0.12] - 2024-02-29 &ensp;
+- animacoes 100% custom aos coletaveis
+
 ## \<rgar\> [0.0.11] - 2024-02-29 &ensp;
-- adicionar itens coletaveis
-- textura temporaria pros itens coletaveis
-- fazer coletaveis usarem o método herdado de renderizacao herdado de physics entity (POO!!)
+- suporte a itens coletaveis
 
 ## \<afs15\> [0.0.10] - 2024-02-29 &ensp;
 - adicionar editor de mapas: para usalo, clique no bloco com o botao esquerdo pra copiar o bloco,

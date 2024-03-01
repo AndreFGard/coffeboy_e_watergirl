@@ -11,7 +11,7 @@ class PhysicsEntity:
         self.velocity = [0,0]
 
         self.action = ''
-
+        self.apply_gravity = True
         #esse offset tira o padding que as imagens das animacoes tem como margem
         # pra representar seus movimentos
         self.anim_offset = (-3, -3)
@@ -77,7 +77,8 @@ class PhysicsEntity:
             self.flip = True
 
         #isso lida com a gravidade
-        self.velocity[1] = min(5, self.velocity[1] + 0.1)
+        if self.apply_gravity:
+            self.velocity[1] = min(5, self.velocity[1] + 0.1)
 
         if self.collisions['down'] or self.collisions['up']:
             self.velocity[1] = 0
@@ -94,6 +95,18 @@ class PhysicsEntity:
         # pygame.draw.rect(surface, (0,0,150), pygame.Rect(self.pos[0] -offset[0], self.pos[1] -offset[1], self.size[0], self.size[1]) )
         # surface.blit(self.game.assets['player'], 
         #              subtract_vectors(self.pos, offset))
+
+
+class AnimatedSimplePhysicsEntity(PhysicsEntity):
+    def __init__(self, game, pos, size):
+        super().__init__(game, 'colecionavel', pos, size)
+
+        #tempo que passou no ar
+        self.air_time = 0
+
+    def update(self, tilemap, movement=(0,3)):
+        super().update(tilemap, movement=movement)
+
 
 class Player(PhysicsEntity):
     def __init__(self, game, pos, size):
@@ -122,6 +135,7 @@ class ItemColecionavel(PhysicsEntity):
         super().__init__(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
         self.coletado = False
+        self.apply_gravity = False
 
     def update(self, tilemap: Tilemap, movement=(0, 0)):
         """Move o item colecionável"""
@@ -129,6 +143,8 @@ class ItemColecionavel(PhysicsEntity):
 
         # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
 
-
-        # Você pode personalizar a renderização do item colecionável conforme necessário
+    # def render(self, superficie: pygame.Surface, deslocamento):
+    #     """Renderiza o item colecionável"""
+    #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
+    #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
