@@ -5,7 +5,7 @@ from modules.entities import PhysicsEntity, Player
 from modules.utils import load_image, load_images, Animation
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
-from modules.hud import Item, InventorySlot, Inventory
+from modules.hud import Item, InventorySlot, Inventory, pause_menu
 
 class Game(modules.input.Input):
     def __init__(self):
@@ -86,6 +86,7 @@ class Game(modules.input.Input):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                # Movimentação do personagem
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
@@ -99,9 +100,12 @@ class Game(modules.input.Input):
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
                         
+                # Fullscreen e pause
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_m or event.key == pygame.K_ESCAPE:
+                    if event.key == pygame.K_m:
                         self.toggle_fullscreen()
+                    if event.key == pygame.K_ESCAPE:
+                        pause_menu(self)
                 
                     
 
@@ -116,7 +120,7 @@ class Game(modules.input.Input):
 
     def draw_invent(self):
     # Outros desenhos, atualizações, etc.
-        item1 = Item("Grão de Café", "./data/images/inventory/coffee-beans.png")
+        item1 = Item("Grão de Café", "./data/images/hud/inventory/coffee-beans.png")
         slot1 = InventorySlot(100, 800)
         slot2 = InventorySlot(200, 800)
         slot3 = InventorySlot(300, 800)
