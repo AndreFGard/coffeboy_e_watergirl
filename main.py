@@ -39,7 +39,8 @@ class Game(modules.input.Input):
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
+            'colecionavel': load_image('entities/player/idle/00.png'),
+            'colecionavel/idle': Animation(load_images('coins/'), img_dur=2, loop=True),
 
             }
         #print(self.assets)
@@ -83,9 +84,11 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
+
             # Renderizar os itens colecionáveis
             for item in self.itens_colecionaveis:
                 if not item.coletado:
+                    item.update(self.tilemap)
                     item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
