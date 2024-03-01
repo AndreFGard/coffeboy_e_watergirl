@@ -1,19 +1,17 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel
-from modules.utils import load_image, load_images, Animation, subtract_vectors
+from modules.entities import PhysicsEntity, Player
+from modules.utils import load_image, load_images, Animation, subtract_vectors, k_vector,sum_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
-from modules.hud import Item, InventorySlot, Inventory, pause_menu
 
 class Game(modules.input.Input):
     def __init__(self):
         modules.input.Input.__init__(self)
         self.width = 1280
         self.height = 960
-        self.is_fullscreen = False
-    
+
         pygame.init()
         pygame.display.set_caption("coffeboy e watergirl")
 
@@ -22,7 +20,7 @@ class Game(modules.input.Input):
         #renderizamos nela e depois escalamos pra screen 
         #é no display que gravaremos as coisas
         self.display = pygame.Surface((320, 240))
-
+        self.render_scale = self.width // 320
         self.player_x, self.player_y = self.width // 2, self.height // 2
         self.movement = [False, False]
 
@@ -38,43 +36,45 @@ class Game(modules.input.Input):
             'player/run': Animation(load_images('entities/player/run'), img_dur=4),
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
-
+            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4)
             }
         #print(self.assets)
-        self.player = Player(self, (50, 50), (8, 15))
-        self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
+        self.player = Player(self, (0, 0), (8, 15))
+        self.tilemap = Tilemap(self, map_filename="data/maps/1.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
-        item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
-        self.itens_colecionaveis = [item1,item2]
-        self.inventario = []
-
         #esse é o offset da camera
         self.scroll = [0,0]
+        self.shift_pressed = False
 
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
-        
-    
-    def toggle_fullscreen(self):
-        # Alterna entre o modo de tela cheia e o modo de janela
-        self.is_fullscreen = not self.is_fullscreen
 
-        if self.is_fullscreen:
-            self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+    def get_mouse_pos(self):
+        """retorna a posicao do mouse no sistema local de coordenadas"""
+        pos = pygame.mouse.get_pos()
+        # passar a posicao de volta pro sistema de coordenadas local
+        pos = pos[0]//self.render_scale, pos[1]//self.render_scale
+        pos = sum_vectors(pos, self.scroll)
+        return pos
+
+    def get_pos_at_tilemap(self, pos):
+        """traduz a coordenada local pra coordenada do tilemap"""
+        return f"{pos[0] // self.tilemap.tile_size};{pos[1] // self.tilemap.tile_size}"
+
+    def get_tile_at_pos(self, pos):
+        #passar a coordenada local pra coordenada tilemap
+        coord_translated = self.get_pos_at_tilemap(pos)
+        if coord_translated in self.tilemap.tilemap:
+            return self.tilemap.tilemap[coord_translated]
         else:
-            self.screen = pygame.display.set_mode((self.width, self.height))
-            
-            
+            #print(self.tilemap.tilemap)
+            return {}
+
     def run(self):
         clock = pygame.time.Clock()
-
+        a = False
+        selected_tile = {}
         while True:
-            self.draw_invent()  # mostra o inventário na tela
-            
-            
             #self.display.fill((200,200,255))
             self.display.blit(self.assets['background'], (0,0))
 
@@ -86,27 +86,14 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
-            # Renderizar os itens colecionáveis
-            for item in self.itens_colecionaveis:
-                if not item.coletado:
-                    item.render(self.display, self.scroll)
-            for item in self.itens_colecionaveis:
-                if not item.coletado and self.player.rect().colliderect(item.rect()):
-                    self.inventario.append(item)
-                    item.coletado = True
-                    # Remova o item da lista de itens colecionáveis
-                    self.itens_colecionaveis.remove(item)
-                    break  # Sair do loop assim que um item for coletado
-            
-
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.tilemap.__dump_map__()
                     pygame.quit()
                     sys.exit()
-                # Movimentação do personagem
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
@@ -114,20 +101,42 @@ class Game(modules.input.Input):
                         self.movement[1] = True
                     if event.key == pygame.K_UP:
                         self.player.velocity[1] = -3
+                    if event.key == pygame.K_LSHIFT:
+                        self.shift_pressed = True
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = False
+                    if event.key == pygame.K_LSHIFT:
+                        self.shift_pressed = False
+
+                #pegar e carregar bloco 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if selected_tile and self.shift_pressed: 
+                        #se o tile ja ta selecionado eo shift ta sendo apertado
+                        # adicionar este tipo de tile nesta posicao
+                        selected_tile = selected_tile.copy()
+                        posicao_tilemap = self.get_pos_at_tilemap(self.get_mouse_pos())
+                        print(posicao_tilemap.split(";"))
+                        selected_tile['pos'] = list(map(int, posicao_tilemap.split(";")))
+                        self.tilemap.tilemap[posicao_tilemap] = selected_tile
                         
-                # Fullscreen e pause
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_m:
-                        self.toggle_fullscreen()
-                    if event.key == pygame.K_ESCAPE:
-                        pause_menu(self)
-                
-                    
+                    mouse_pos = self.get_mouse_pos()
+                    selected_tile = self.get_tile_at_pos(mouse_pos)
+                    if selected_tile:
+                        if event.button == 3:
+                            #clique direito
+                            #remover tile do mapa
+                            pos_tilemap = self.get_pos_at_tilemap(mouse_pos)
+                            self.tilemap.tilemap.pop(pos_tilemap) 
+
+                        #print(selected_tile)
+            
+            if selected_tile:
+                #se se
+                self.display.blit(self.assets[selected_tile['type']][selected_tile['variant']], subtract_vectors(self.get_mouse_pos(), self.scroll))
+                #pygame.draw.rect(self.display, (255,0,0), (*subtract_vectors(self.get_mouse_pos(), self.scroll),10, 16))
 
             pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
 
@@ -138,22 +147,7 @@ class Game(modules.input.Input):
             clock.tick(60)
 
 
-    def draw_invent(self):
-    # Outros desenhos, atualizações, etc.
-        item1 = Item("Grão de Café", "./data/images/hud/inventory/coffee-beans.png")
-        slot1 = InventorySlot(100, 800)
-        slot2 = InventorySlot(200, 800)
-        slot3 = InventorySlot(300, 800)
-        inventory = Inventory(3)
-        inventory.add_slot(slot1)
-        inventory.add_slot(slot2)
-        inventory.add_slot(slot3)
-        inventory.add_item_to_slot(item1, 0)
-        
-        Inventory.draw_inventory(self, inventory)
 
-        # Atualiza a tela
-        pygame.display.flip()
 
 
 

@@ -110,10 +110,25 @@ class Player(PhysicsEntity):
             self.air_time = 0
 
         if self.air_time > 4:
-            print("jump")
             self.set_action('jump')
         elif movement[0] != 0:
-            print("run")
             self.set_action('run')
         else:
             self.set_action('idle')
+
+        
+class ItemColecionavel(PhysicsEntity):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
+        self.pontuacao = pontuacao
+        self.coletado = False
+
+    def update(self, tilemap: Tilemap, movement=(0, 0)):
+        """Move o item colecionável"""
+        super().update(tilemap, movement)
+
+        # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
+
+
+        # Você pode personalizar a renderização do item colecionável conforme necessário
+

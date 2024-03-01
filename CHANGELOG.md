@@ -1,3 +1,19 @@
+## \<rgar\> [0.0.11] - 2024-02-29 &ensp;
+- adicionar itens coletaveis
+- textura temporaria pros itens coletaveis
+- fazer coletaveis usarem o método herdado de renderizacao herdado de physics entity (POO!!)
+
+## \<afs15\> [0.0.10] - 2024-02-29 &ensp;
+- adicionar editor de mapas: para usalo, clique no bloco com o botao esquerdo pra copiar o bloco,
+- botao direito pra deletá-lo. com um bloco copiado na mao, apertar shift e clicar pra colocalo no mapa.
+- o mapa sera automaticamente salvo em "newmap.json"
+
+
+## \<afs15\> [0.0.9] - 2024-02-29 &ensp;
+- fazer o tilemap ler o mapa a partir de um arquivo
+- remover prints de debug
+
+
 ## \<afs15\> [0.0.8] - 2024-02-28 &ensp;
   - suporte a animacoes adicionado à PhysicsEngine
   - faltou documentar
