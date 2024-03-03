@@ -41,6 +41,8 @@ class Game(modules.input.Input):
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
             'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
 
+            "Grão de Café": load_image("hud/inventory/coffee-beans.png"),
+
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), (8, 15))
@@ -73,7 +75,7 @@ class Game(modules.input.Input):
         clock = pygame.time.Clock()
 
         # parâmetros gerais do inventário
-        item1 = Item("Grão de Café", "./data/images/hud/inventory/coffee-beans.png")
+        item1 = Item("Grão de Café", game=self)
         slot1 = InventorySlot(100, 800)
         slot2 = InventorySlot(200, 800)
         slot3 = InventorySlot(300, 800)

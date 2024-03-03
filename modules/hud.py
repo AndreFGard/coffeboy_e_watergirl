@@ -7,9 +7,10 @@ width, height = 1280, 960
 screen = pygame.display.set_mode((width, height))
 
 class Item: # representa os itens que podem ser armazenados no inventário
-    def __init__(self, name, image_path):
+    def __init__(self, name, game):
         self.name = name
-        self.image_path = image_path
+        self.type = name
+        self.image = game.assets[self.type]
 
 class InventorySlot: # representa um slot individual no inventário.
     def __init__(self, x, y):
@@ -69,7 +70,7 @@ class Inventory: # representa o inventário como um todo.
             self.screen.blit(slot_image, (start_x + i * (slot_width + slot_spacing), slot.y))
 
             if slot.item:
-                item_image = pygame.image.load(slot.item.image_path)
+                item_image = slot.item.image
                 
                 # Ajusta o tamanho desejado da imagem do item (por exemplo, 60x60 pixels)
                 item_image = pygame.transform.scale(item_image, (60, 60))
