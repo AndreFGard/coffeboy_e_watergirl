@@ -16,9 +16,15 @@ class InventorySlot: # representa um slot individual no inventário.
         self.x = x
         self.y = y
         self.item = None
+        self.quantity = 0
 
     def set_item(self, item):
-        self.item = item
+        if self.item and self.item.name == item.name:
+            self.quantity += 1  # Se o item já estiver no slot, aumente a quantidade
+        else:
+            self.item = item
+            self.quantity = 1  # Se o item não estiver no slot, defina a quantidade como 1
+
 
 class Inventory: # representa o inventário como um todo.
     def __init__(self, capacity):
@@ -31,7 +37,7 @@ class Inventory: # representa o inventário como um todo.
     def add_item_to_slot(self, item, slot_index):
         if slot_index < len(self.slots):
             self.slots[slot_index].set_item(item)
-            print(f"{item.name} adicionado ao slot {slot_index + 1}")
+            print(f"{item.name} adicionado ao slot {slot_index + 1} - Quantidade: {self.slots[slot_index].quantity}")
         else:
             print("Slot inválido")
 
@@ -73,6 +79,14 @@ class Inventory: # representa o inventário como um todo.
                 item_y = slot.y + (slot_height - item_image.get_height()) // 2
 
                 self.screen.blit(item_image, (item_x, item_y))  # Mostra a imagem do item no slot
+                
+                if slot.quantity > 0:
+                    font = pygame.font.Font(None, 100)
+                    quantity_text = font.render(str(slot.quantity), True, (0, 0, 0))
+                    quantity_rect = quantity_text.get_rect(center=(item_x + 15, item_y + 15))
+                    self.screen.blit(quantity_text, quantity_rect.topleft)
+
+                
 
 
 def pause_menu(self):
