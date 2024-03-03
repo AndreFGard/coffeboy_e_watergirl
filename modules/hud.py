@@ -49,8 +49,8 @@ class Inventory: # representa o inventário como um todo.
         slot_image = pygame.image.load("./data/images/hud/inventory/empty_slot.png")
         
         # Ajusta as dimensões do retângulo do slot (por exemplo, 80x80 pixels)
-        slot_width = 80
-        slot_height = 80
+        slot_width = 110
+        slot_height = 110
         
         # Espaçamento entre os slots
         slot_spacing = 50
@@ -81,9 +81,11 @@ class Inventory: # representa o inventário como um todo.
                 self.screen.blit(item_image, (item_x, item_y))  # Mostra a imagem do item no slot
                 
                 if slot.quantity > 0:
-                    font = pygame.font.Font(None, 100)
-                    quantity_text = font.render(str(slot.quantity), True, (0, 0, 0))
-                    quantity_rect = quantity_text.get_rect(center=(item_x + 15, item_y + 15))
+                    font_path = './data/font/MadimiOne-Regular.ttf'
+                    font = pygame.font.Font(font_path, 37)
+                    quantity_text = font.render(str(slot.quantity), True, (48, 39, 32))
+                    #quantity_text = font.render(str(slot.quantity), True, (0,0,0))
+                    quantity_rect = quantity_text.get_rect(center=(item_x + 30, item_y + 82))
                     self.screen.blit(quantity_text, quantity_rect.topleft)
 
                 
