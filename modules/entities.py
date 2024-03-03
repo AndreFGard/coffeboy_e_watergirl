@@ -135,6 +135,7 @@ class ItemColecionavel(PhysicsEntity):
         super().__init__(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
         self.coletado = False
+        self.is_buff = False
         self.apply_gravity = False
 
     def update(self, tilemap: Tilemap, movement=(0, 0)):

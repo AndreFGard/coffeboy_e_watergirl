@@ -52,7 +52,6 @@ class Game(modules.input.Input):
         item1 = Item(self, 'moeda', (80,50), (8,15))
         item2 = Item(self, 'Grão de Café', (100,50), (8,15))
         item3 = Item(self, 'Grão de Café', (120,50), (8,15))
-
         self.itens_colecionaveis = [item1,item2, item3]
         self.inventario = []
 
@@ -67,6 +66,7 @@ class Game(modules.input.Input):
     def toggle_fullscreen(self):
         # Alterna entre o modo de tela cheia e o modo de janela
         self.is_fullscreen = not self.is_fullscreen
+
 
         if self.is_fullscreen:
             self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
@@ -101,8 +101,8 @@ class Game(modules.input.Input):
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_colecionaveis:
-                if not item.coletado:
-                    item.render(self.display, self.scroll)
+                item.update(self.tilemap)
+                item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     self.inventario.append(item)
