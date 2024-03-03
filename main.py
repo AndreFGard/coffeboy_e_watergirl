@@ -5,7 +5,7 @@ from modules.entities import PhysicsEntity, Player, ItemColecionavel
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
-from modules.hud import pause_menu
+from modules.hud import Item, InventorySlot, Inventory, pause_menu
 
 class Game(modules.input.Input):
     def __init__(self):
@@ -39,8 +39,7 @@ class Game(modules.input.Input):
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'colecionavel': load_image('entities/player/idle/00.png'),
-            'colecionavel/idle': Animation(load_images('coins/'), img_dur=2, loop=True),
+            'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
 
             }
         #print(self.assets)
@@ -57,7 +56,8 @@ class Game(modules.input.Input):
 
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
- 
+        
+        
     
     def toggle_fullscreen(self):
         # Alterna entre o modo de tela cheia e o modo de janela
@@ -71,7 +71,17 @@ class Game(modules.input.Input):
             
     def run(self):
         clock = pygame.time.Clock()
-        
+
+        # parâmetros gerais do inventário
+        item1 = Item("Grão de Café", "./data/images/hud/inventory/coffee-beans.png")
+        slot1 = InventorySlot(100, 800)
+        slot2 = InventorySlot(200, 800)
+        slot3 = InventorySlot(300, 800)
+        inventory = Inventory(3)
+        inventory.add_slot(slot1)
+        inventory.add_slot(slot2)
+        inventory.add_slot(slot3)
+    
         while True:
             #self.display.fill((200,200,255))
             self.display.blit(self.assets['background'], (0,0))
@@ -84,16 +94,15 @@ class Game(modules.input.Input):
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
-
             # Renderizar os itens colecionáveis
             for item in self.itens_colecionaveis:
                 if not item.coletado:
-                    item.update(self.tilemap)
                     item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     self.inventario.append(item)
                     item.coletado = True
+                    inventory.add_item_to_slot(item1, 0)
                     # Remova o item da lista de itens colecionáveis
                     self.itens_colecionaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
@@ -134,8 +143,23 @@ class Game(modules.input.Input):
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))
-            pygame.display.update()
+            # Atualiza a tela
+            
+            #pygame.display.update()
+            
             clock.tick(60)
+            self.draw_invent(inventory)  # mostra o inventário na tela
+            
+            
+
+
+    def draw_invent(self, inventory):
+        # Atualizando o inventário
+        Inventory.draw_inventory(self, inventory)
+        pygame.display.flip()
+
+        
+
 
 
 
