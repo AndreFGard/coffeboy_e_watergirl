@@ -39,17 +39,18 @@ class Game(modules.input.Input):
             'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
             'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'colecionavel/idle': Animation(load_images("coins"), img_dur=4),
-
-            "Grão de Café": load_image("hud/inventory/coffee-beans.png"),
+            'moeda/idle': Animation(load_images("coins"), img_dur=4),
+            'moeda': load_image("coins/00.png"),
+            "Grão de Café": pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (20,20)),
+            'Grão de Café/idle':Animation( list(map(lambda img: pygame.transform.scale(img, (20,20)), load_images("hud/inventory/coffee_beans/")))),
 
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), (8, 15))
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = ItemColecionavel(self, 'colecionavel', (80,50), (8,15))
-        item2 = ItemColecionavel(self, 'colecionavel', (100,50), (8,15))
+        item1 = ItemColecionavel(self, 'moeda', (80,50), (8,15))
+        item2 = ItemColecionavel(self, 'Grão de Café', (100,50), (8,15))
         self.itens_colecionaveis = [item1,item2]
         self.inventario = []
 
@@ -97,6 +98,7 @@ class Game(modules.input.Input):
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             self.player.render(self.display, offset=self.scroll)
             # Renderizar os itens colecionáveis
+            # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_colecionaveis:
                 if not item.coletado:
                     item.render(self.display, self.scroll)
