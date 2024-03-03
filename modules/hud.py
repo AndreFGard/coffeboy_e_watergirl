@@ -1,13 +1,15 @@
 import pygame
 import pyguix.ui.elements as ui
 import sys
+from modules.entities import ItemColecionavel
 
 # Configurações da tela
 width, height = 1280, 960
 screen = pygame.display.set_mode((width, height))
 
-class Item: # representa os itens que podem ser armazenados no inventário
-    def __init__(self, name, game):
+class Item(ItemColecionavel): # representa os itens que podem ser armazenados no inventário
+    def __init__(self, game, name, posicao, tamanho,):
+        super().__init__(game, name, posicao, tamanho)
         self.name = name
         self.type = name
         self.image = game.assets[self.type]
@@ -26,6 +28,9 @@ class InventorySlot: # representa um slot individual no inventário.
             self.item = item
             self.quantity = 1  # Se o item não estiver no slot, defina a quantidade como 1
 
+    def get_item(self):
+        return self.item
+
 
 class Inventory: # representa o inventário como um todo.
     def __init__(self, capacity):
@@ -37,10 +42,21 @@ class Inventory: # representa o inventário como um todo.
 
     def add_item_to_slot(self, item, slot_index):
         if slot_index < len(self.slots):
-            self.slots[slot_index].set_item(item)
-            print(f"{item.name} adicionado ao slot {slot_index + 1} - Quantidade: {self.slots[slot_index].quantity}")
+            item_at_slot =  self.slots[slot_index].get_item()
+            if not item_at_slot:
+                self.slots[slot_index].set_item(item)
+                print(f"{item.name} adicionado ao slot {slot_index + 1} - Quantidade: {self.slots[slot_index].quantity}")
+            else:
+                if item_at_slot.name == item.name:
+                    #se o slot ocupado com item do mesmo tipo que queremos
+                    print("FOUND SLOT")
+                    self.slots[slot_index].set_item(item)
+                else:
+                    print(f"buscando outro slot pra {item.name}")
+                    self.add_item_to_slot(item, slot_index + 1)
+                
         else:
-            print("Slot inválido")
+            print("Slot inválido/sem slots restando")
 
     
         

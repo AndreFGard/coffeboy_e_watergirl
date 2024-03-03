@@ -49,9 +49,11 @@ class Game(modules.input.Input):
         self.player = Player(self, (50, 50), (8, 15))
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = ItemColecionavel(self, 'moeda', (80,50), (8,15))
-        item2 = ItemColecionavel(self, 'Grão de Café', (100,50), (8,15))
-        self.itens_colecionaveis = [item1,item2]
+        item1 = Item(self, 'moeda', (80,50), (8,15))
+        item2 = Item(self, 'Grão de Café', (100,50), (8,15))
+        item3 = Item(self, 'Grão de Café', (120,50), (8,15))
+
+        self.itens_colecionaveis = [item1,item2, item3]
         self.inventario = []
 
         #esse é o offset da camera
@@ -76,7 +78,6 @@ class Game(modules.input.Input):
         clock = pygame.time.Clock()
 
         # parâmetros gerais do inventário
-        item1 = Item("Grão de Café", game=self)
         slot1 = InventorySlot(100, 800)
         slot2 = InventorySlot(200, 800)
         slot3 = InventorySlot(300, 800)
@@ -106,7 +107,7 @@ class Game(modules.input.Input):
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     self.inventario.append(item)
                     item.coletado = True
-                    inventory.add_item_to_slot(item1, 0)
+                    inventory.add_item_to_slot(item, 0)
                     # Remova o item da lista de itens colecionáveis
                     self.itens_colecionaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
