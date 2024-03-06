@@ -31,6 +31,10 @@ class PhysicsEntity:
     def rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
 
+    def rect_with_offset(self, offset:tuple):
+        return pygame.Rect(sum_vectors(subtract_vectors(self.pos, offset),
+                                 self.anim_offset), self.size)
+
     def update(self, tilemap:Tilemap, movement=(0,0)):
         """moves the player"""
         self.collisions = {'up': False, 'down': False, 'left': False, 'right': False}

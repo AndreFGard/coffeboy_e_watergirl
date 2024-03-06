@@ -105,6 +105,9 @@ class Game(modules.input.Input):
                 item.update(self.tilemap)
                 item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
+                #desenhar area de colisao
+                pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
+
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     item.coletado = True
 
