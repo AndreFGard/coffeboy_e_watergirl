@@ -1,8 +1,16 @@
-## \<afs15\> [0.0.12] - 2024-02-29 &ensp;
+## \<bpas\> [0.0.14] - 2024-03-03 &ensp;
+- adicionando inventário na tela
+- interação dinâmica entre os coletáveis no mapa e o inventário
+
+## \<afs15\> [0.0.13] - 2024-02-29 &ensp;
 - animacoes 100% custom aos coletaveis
 
-## \<rgar\> [0.0.11] - 2024-02-29 &ensp;
+## \<rgar\> [0.0.12] - 2024-02-29 &ensp;
 - suporte a itens coletaveis
+
+## \<bpas\> [0.0.11] - 2024-02-29 &ensp;
+- modo fullscreen usando a tecla M
+- pause menu usando a tecla ESC
 
 ## \<afs15\> [0.0.10] - 2024-02-29 &ensp;
 - adicionar editor de mapas: para usalo, clique no bloco com o botao esquerdo pra copiar o bloco,
