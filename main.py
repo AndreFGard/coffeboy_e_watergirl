@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel
+from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -52,12 +52,13 @@ class Game(modules.input.Input):
         item1 = Item(self, 'moeda', (80,50), (8,15))
         item2 = Item(self, 'Grão de Café', (100,50), (8,15))
         item3 = Item(self, 'Grão de Café', (120,50), (8,15))
-        self.itens_colecionaveis = [item1,item2, item3]
+        buff1 = Buff(self, "moeda", (40, 50), (8,15))
+        self.itens_colecionaveis = [item1,item2, item3, buff1]
         self.inventario = []
 
         #esse é o offset da camera
         self.scroll = [0,0]
-
+        self.active_buffs = []
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
         
@@ -105,14 +106,24 @@ class Game(modules.input.Input):
                 item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
-                    self.inventario.append(item)
                     item.coletado = True
-                    inventory.add_item_to_slot(item, 0)
+
+                    #tratar os buffs separadamente, pois estes nao podem ser coletados
+                    if item.is_buff:
+                        self.active_buffs.append(item)
+                        item.apply_to_target(self.player)
+                    else:    
+                        self.inventario.append(item)
+                        inventory.add_item_to_slot(item, 0)
                     # Remova o item da lista de itens colecionáveis
                     self.itens_colecionaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
-
+            #atualizar os buffs
+            for i,buff in enumerate(self.active_buffs):
+                #se o buff nao estiver mais ativo, removê-lo
+                if not buff.update(self.tilemap):
+                    self.active_buffs.pop(i)
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
 
