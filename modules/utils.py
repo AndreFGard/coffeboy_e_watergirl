@@ -29,7 +29,7 @@ def load_images(path):
     return images
 
 class Animation:
-    def __init__(self, images, img_dur=5, loop=True):
+    def __init__(self, images: list[pygame.Surface], img_dur=5, loop=True):
         self.images = images
         # a animacao durara por 5 * len(self.images)
         self.img_dur=5
@@ -38,6 +38,9 @@ class Animation:
         self.loop = loop
         self.done = False
         self.frame = 0
+        
+        #tamanho, pra quando ele nao for fornecido
+        self.size = images[0].get_size()
     
     def copy(self):
         return Animation(self.images, self.img_dur, self.loop)
