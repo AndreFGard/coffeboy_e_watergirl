@@ -136,11 +136,16 @@ class Player(PhysicsEntity):
         
 class ItemColecionavel(PhysicsEntity):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        if not tamanho:
+            tamanho = game.assets[tipo + "/" + "idle"].size
         super().__init__(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
         self.coletado = False
         self.is_buff = False
         self.apply_gravity = False
+
+        #pegar o tamanho da imagem, se ele nao for fornecido
+
 
     def update(self, tilemap: Tilemap, movement=(0, 0)):
         """Atualiza a animacao e move o item colecionável"""
