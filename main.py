@@ -41,9 +41,9 @@ class Game(modules.input.Input):
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
             'moeda/idle': Animation(load_images("coins"), img_dur=4),
             'moeda': load_image("coins/00.png"),
-            "Grão de Café": pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (20,20)),
-            'Grão de Café/idle':Animation( list(map(lambda img: pygame.transform.scale(img, (20,20)), load_images("hud/inventory/coffee_beans/")))),
-
+            "Grão de Café": load_image("hud/inventory/coffee_beans/00.png"),
+            'Grão de Café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
+            
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), (8, 15))
