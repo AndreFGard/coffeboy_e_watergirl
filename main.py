@@ -41,9 +41,14 @@ class Game(modules.input.Input):
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
             'moeda/idle': Animation(load_images("coins"), img_dur=4),
             'moeda': load_image("coins/00.png"),
-            "Grão de Café": load_image("hud/inventory/coffee_beans/00.png"),
+            'Grão de Café': load_image("hud/inventory/coffee_beans/00.png"),
             'Grão de Café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
+            'Água quente': load_image("hud/inventory/water_cup/00.png"),
+            'Água quente/idle':Animation([pygame.transform.scale(load_image("hud/inventory/water_cup/00.png"), (17,17))]),
             
+            # O copo de café não é coletável, seria usado no fim da fase para 'transformar' os coletados no copo de café (objetivo)
+            'Copo de café': load_image("hud/inventory/coffee_cup/00.png"),
+            'Copo de café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_cup/00.png"), (17,17))]),
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), (8, 15))
@@ -52,8 +57,9 @@ class Game(modules.input.Input):
         item1 = Item(self, 'moeda', (80,50), (8,15))
         item2 = Item(self, 'Grão de Café', (100,50), (8,15))
         item3 = Item(self, 'Grão de Café', (120,50), (8,15))
+        item4 = Item(self, 'Água quente', (150, 150), (8,15))
         buff1 = Buff(self, "moeda", (40, 50), (8,15))
-        self.itens_colecionaveis = [item1,item2, item3, buff1]
+        self.itens_colecionaveis = [item1,item2, item3, item4, buff1]
         self.inventario = []
 
         #esse é o offset da camera
@@ -67,7 +73,6 @@ class Game(modules.input.Input):
     def toggle_fullscreen(self):
         # Alterna entre o modo de tela cheia e o modo de janela
         self.is_fullscreen = not self.is_fullscreen
-
 
         if self.is_fullscreen:
             self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
