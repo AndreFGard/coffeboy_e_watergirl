@@ -10,10 +10,13 @@ from modules.hud import Item, InventorySlot, Inventory, pause_menu
 class Game(modules.input.Input):
     def __init__(self):
         modules.input.Input.__init__(self)
-        self.width = 1280
-        self.height = 960
+
         self.is_fullscreen = False
-    
+        host_screen_height, host_screen_width = pygame.display.Info().current_h, pygame.display.Info().current_w
+
+        self.width = min(1280, host_screen_width)
+        self.height = min(960, host_screen_height)
+
         pygame.init()
         pygame.display.set_caption("coffeboy e watergirl")
 
@@ -104,7 +107,6 @@ class Game(modules.input.Input):
             for item in self.itens_colecionaveis:
                 item.update(self.tilemap)
                 item.render(self.display, self.scroll)
-            for item in self.itens_colecionaveis:
                 #desenhar area de colisao
                 pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
 
@@ -135,24 +137,24 @@ class Game(modules.input.Input):
                     pygame.quit()
                     sys.exit()
                 # Movimentação do personagem
-                if event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
-                    if event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT:
                         self.movement[1] = True
-                    if event.key == pygame.K_UP:
+                    elif event.key == pygame.K_UP:
                         self.player.velocity[1] = -3
-                if event.type == pygame.KEYUP:
+                elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT:
                         self.movement[1] = False
                         
                 # Fullscreen e pause
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_m:
                         self.toggle_fullscreen()
-                    if event.key == pygame.K_ESCAPE:
+                    elif event.key == pygame.K_ESCAPE:
                         pause_menu(self)
                 
                     

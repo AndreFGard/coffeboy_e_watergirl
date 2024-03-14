@@ -1,6 +1,10 @@
 
+## \<afs15\> [0.0.16] - 2024-03-14 &ensp;
+- pequena otimização através do uso de elifs
+- ajuste do tamanho da janela do jogo à tela do jogador
+
 ## \<afs15\> [0.0.15] - 2024-03-06 &ensp;
-- criar o tipo primitivo dos buffs
+- criar a classe dos buffs
 - tentativa de consertar as colisoes incoerentes com os sprites (falha)
 
 ## \<bpas\> [0.0.14] - 2024-03-01 &ensp;
