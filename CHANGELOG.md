@@ -1,8 +1,17 @@
-## \<bpas\> [0.0.14] - 2024-03-03 &ensp;
+
+## \<afs15\> [0.0.15] - 2024-03-06 &ensp;
+- criar o tipo primitivo dos buffs
+- tentativa de consertar as colisoes incoerentes com os sprites (falha)
+
+## \<bpas\> [0.0.14] - 2024-03-01 &ensp;
+- adicionar a UI
+- adicionar o HUD do inventário
+- tornar os itens coletáveis coletáveis de verdade
 - adicionando inventário na tela
 - interação dinâmica entre os coletáveis no mapa e o inventário
 
 ## \<afs15\> [0.0.13] - 2024-02-29 &ensp;
+
 - animacoes 100% custom aos coletaveis
 
 ## \<rgar\> [0.0.12] - 2024-02-29 &ensp;

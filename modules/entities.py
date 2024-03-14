@@ -1,7 +1,6 @@
 import pygame
 from modules.utils import sum_vectors, subtract_vectors
 from modules.tilemap import Tilemap
-
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size):
         self.game = game
@@ -15,6 +14,7 @@ class PhysicsEntity:
         #esse offset tira o padding que as imagens das animacoes tem como margem
         # pra representar seus movimentos
         self.anim_offset = (-3, -3)
+        self.movement_multiplier = 1
         
         #pra caso ele esteja virado pro outro lado
         self.flip = False
@@ -31,6 +31,10 @@ class PhysicsEntity:
     def rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
 
+    def rect_with_offset(self, offset:tuple):
+        return pygame.Rect(sum_vectors(subtract_vectors(self.pos, offset),
+                                 self.anim_offset), self.size)
+
     def update(self, tilemap:Tilemap, movement=(0,0)):
         """moves the player"""
         self.collisions = {'up': False, 'down': False, 'left': False, 'right': False}
@@ -39,7 +43,7 @@ class PhysicsEntity:
 
         #-------------------------------------------------------#
         # colisao
-        self.pos[0] += frame_movement[0]
+        self.pos[0] += int(frame_movement[0] * self.movement_multiplier)
         entity_rect = self.rect()
         for rect in tilemap.physics_rects_around(self.pos):
             if entity_rect.colliderect(rect):
@@ -132,13 +136,19 @@ class Player(PhysicsEntity):
         
 class ItemColecionavel(PhysicsEntity):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        if not tamanho:
+            tamanho = game.assets[tipo + "/" + "idle"].size
         super().__init__(game, tipo, posicao, tamanho)
         self.pontuacao = pontuacao
         self.coletado = False
+        self.is_buff = False
         self.apply_gravity = False
 
+        #pegar o tamanho da imagem, se ele nao for fornecido
+
+
     def update(self, tilemap: Tilemap, movement=(0, 0)):
-        """Move o item colecionável"""
+        """Atualiza a animacao e move o item colecionável"""
         super().update(tilemap, movement)
 
         # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
@@ -148,3 +158,32 @@ class ItemColecionavel(PhysicsEntity):
     #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
+class Buff(ItemColecionavel):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
+        self.is_buff = True
+        
+        #se o buff esta sendo aplicado agora
+        self.applying = False
+        #tempo em frames durante o qual o target sera afetado pelo buff
+        self.validity = 7 * 60
+
+    def apply_to_target(self, target:PhysicsEntity):
+        """Apenas um exemplo do que um buff faria a um jogador"""
+        self.target = target
+        self.applying = True
+        target.movement_multiplier += 4
+
+    def __remove_buff(self, target:PhysicsEntity):
+        """Apenas um exemplo da reversão de um buff"""
+        target.movement_multiplier = 1
+
+    def update(self, tilemap: Tilemap, movement=(0,0)):
+        """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""
+        super().update(tilemap, movement)
+        if self.applying:
+            self.validity -= 1
+            if self.validity < 0:
+                self.__remove_buff(self.target)
+                return False
+        return True
