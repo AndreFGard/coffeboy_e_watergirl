@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff
+from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -56,8 +56,18 @@ class Game(modules.input.Input):
         item2 = Item(self, 'Grão de Café', (100,50), tamanho=())
         item3 = Item(self, 'Grão de Café', (120,50), tamanho=())
         buff1 = Buff(self, "moeda", (40, 50), tamanho=())
-        self.itens_colecionaveis = [item1,item2, item3, buff1]
+        self.itens_coletaveis = [item1,item2, item3, buff1]
+
+        # parâmetros gerais do inventário
+        slot1 = InventorySlot(100, 800)
+        slot2 = InventorySlot(200, 800)
+        slot3 = InventorySlot(300, 800)
+        self.inventory = Inventory(3)
+        self.inventory.add_slot(slot1)
+        self.inventory.add_slot(slot2)
+        self.inventory.add_slot(slot3)
         self.inventario = []
+
 
         #esse é o offset da camera
         self.scroll = [0,0]
@@ -81,14 +91,7 @@ class Game(modules.input.Input):
     def run(self):
         clock = pygame.time.Clock()
 
-        # parâmetros gerais do inventário
-        slot1 = InventorySlot(100, 800)
-        slot2 = InventorySlot(200, 800)
-        slot3 = InventorySlot(300, 800)
-        inventory = Inventory(3)
-        inventory.add_slot(slot1)
-        inventory.add_slot(slot2)
-        inventory.add_slot(slot3)
+
     
         while True:
             #self.display.fill((200,200,255))
@@ -104,7 +107,7 @@ class Game(modules.input.Input):
             self.player.render(self.display, offset=self.scroll)
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
-            for item in self.itens_colecionaveis:
+            for item in self.itens_coletaveis:
                 #desenhar area de colisao
                 pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
                 item.update(self.tilemap)
@@ -119,9 +122,9 @@ class Game(modules.input.Input):
                         item.apply_to_target(self.player)
                     else:    
                         self.inventario.append(item)
-                        inventory.add_item_to_slot(item, 0)
+                        self.inventory.add_item_to_slot(item, 0)
                     # Remova o item da lista de itens colecionáveis
-                    self.itens_colecionaveis.remove(item)
+                    self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
             #atualizar os buffs
@@ -168,15 +171,15 @@ class Game(modules.input.Input):
             
             #pygame.display.update()
             
-            clock.tick(60)
-            self.draw_invent(inventory)  # mostra o inventário na tela
+            clock.tick(600)
+            self.draw_invent()  # mostra o inventário na tela
             
             
 
 
-    def draw_invent(self, inventory):
+    def draw_invent(self):
         # Atualizando o inventário
-        Inventory.draw_inventory(self, inventory)
+        self.inventory.draw_inventory(self)
         pygame.display.flip()
 
         

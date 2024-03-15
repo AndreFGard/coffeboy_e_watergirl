@@ -102,7 +102,7 @@ class PhysicsEntity:
 
 class AnimatedSimplePhysicsEntity(PhysicsEntity):
     def __init__(self, game, pos, size):
-        super().__init__(game, 'colecionavel', pos, size)
+        super().__init__(game, 'coletavel', pos, size)
 
         #tempo que passou no ar
         self.air_time = 0
@@ -133,7 +133,7 @@ class Player(PhysicsEntity):
             self.set_action('idle')
 
         
-class ItemColecionavel(PhysicsEntity):
+class Itemcoletavel(PhysicsEntity):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         if not tamanho:
             tamanho = game.assets[tipo + "/" + "idle"].size
@@ -157,7 +157,7 @@ class ItemColecionavel(PhysicsEntity):
     #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
-class Buff(ItemColecionavel):
+class Buff(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True

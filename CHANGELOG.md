@@ -1,6 +1,10 @@
+## \<afs15\> [0.0.19]
+- melhora de no mínimo 17% no desempenho atraves da remocao de uma transformacao de tamanho dos itens do inventario que se repetia a cada frame
+
 
 ## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
 - conserto definitivo do problema da colisao dos sprites, alcançado através da associação automática do tamanho do sprite ao tamanho da hitbox e da renovação dos sprites das moedas
+- mudança da nomenclatura das variáveis dos itens coletaveis para que ela seja mais semanticamente adequada 
 
 ## \<frqal\> [0.0.17] - 2024-03-14 &ensp;
 - renovação dos sprites das moedas
