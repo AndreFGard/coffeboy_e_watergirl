@@ -1,5 +1,5 @@
 import pygame
-from modules.utils import sum_vectors, subtract_vectors
+from modules.utils import sum_vectors, subtract_vectors, k_vector
 from modules.tilemap import Tilemap
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size=()):
@@ -89,11 +89,14 @@ class PhysicsEntity:
 
         self.animation.update()
 
-    def render(self, surface: pygame.Surface, offset):
+    def render(self, surface: pygame.Surface, offset, coordinate_system_scale=1):
         """renders the entity in the passed surface"""
+        #o coordinate_system_scale permite que se renderize a entidade
+        #num espaço de coordenadas onde tudo é maior do que o espaço onde existe a entidade
         surface.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
-                     sum_vectors(subtract_vectors(self.pos, offset),
-                                 self.anim_offset))
+                     k_vector(coordinate_system_scale,
+                        sum_vectors(subtract_vectors(self.pos, offset),
+                                    self.anim_offset)))
 
         # pygame.draw.rect(surface, (0,0,150), pygame.Rect(self.pos[0] -offset[0], self.pos[1] -offset[1], self.size[0], self.size[1]) )
         # surface.blit(self.game.assets['player'], 

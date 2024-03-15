@@ -25,7 +25,7 @@ class InventorySlot: # representa um slot individual no inventário.
         self.quantity = 0
 
     def set_item(self, item:Item):
-        #ajustar o tamanho do item
+        # Ajusta o tamanho desejado da imagem do item (por exemplo, 60x60 pixels)
         item.image = pygame.transform.scale(item.image, (ITEM_TAMANHO, ITEM_TAMANHO))
 
         if self.item and self.item.name == item.name:
@@ -101,9 +101,7 @@ class Inventory: # representa o inventário como um todo.
 
             if slot.item:
                 item_image = slot.item.image
-                
-                # Ajusta o tamanho desejado da imagem do item (por exemplo, 60x60 pixels)
-                item_image = pygame.transform.scale(item_image, (60, 60))
+
 
                 # Calcula as coordenadas para centralizar a imagem do item dentro do slot
                 item_x = start_x + i * (slot_width +slot_spacing) + (slot_width - item_image.get_width()) // 2

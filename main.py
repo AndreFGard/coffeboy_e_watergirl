@@ -104,7 +104,7 @@ class Game(modules.input.Input):
 
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display, offset=self.scroll)
+
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_coletaveis:
@@ -168,10 +168,10 @@ class Game(modules.input.Input):
             # e escreve na tela as alteracoes que fizemos, a cada iter
             self.screen.blit(pygame.transform.scale(self.display, (self.width, self.height)), (0,0))
             # Atualiza a tela
-            
+            self.player.render(self.screen, offset=self.scroll, coordinate_system_scale=4)            
             #pygame.display.update()
             
-            clock.tick(600)
+            clock.tick(60)
             self.draw_invent()  # mostra o inventário na tela
             
             

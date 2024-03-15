@@ -1,5 +1,6 @@
-## \<afs15\> [0.0.19]
+## \<afs15\> [0.0.19] - 2024-03-15 &ensp;
 - melhora de no mínimo 17% no desempenho atraves da remocao de uma transformacao de tamanho dos itens do inventario que se repetia a cada frame
+- permitir que o player seja de maior resolução através da adicao do parametro coordinate_system_scale ao metodo render das entidades físicas
 
 
 ## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
