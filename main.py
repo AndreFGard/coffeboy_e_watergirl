@@ -52,10 +52,10 @@ class Game(modules.input.Input):
         self.player = Player(self, (50, 50), (8, 15))
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = Item(self, 'moeda', (80,50), (8,15))
-        item2 = Item(self, 'Grão de Café', (100,50), (8,15))
-        item3 = Item(self, 'Grão de Café', (120,50), (8,15))
-        buff1 = Buff(self, "moeda", (40, 50), (8,15))
+        item1 = Item(self, 'moeda', (80,50), tamanho=())
+        item2 = Item(self, 'Grão de Café', (100,50), tamanho=())
+        item3 = Item(self, 'Grão de Café', (120,50), tamanho=())
+        buff1 = Buff(self, "moeda", (40, 50), tamanho=())
         self.itens_colecionaveis = [item1,item2, item3, buff1]
         self.inventario = []
 
@@ -96,8 +96,8 @@ class Game(modules.input.Input):
 
 
             #dividir por 2 pra que fique no meio
-            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() // 2 - self.scroll[0]) // 10
-            self.scroll[1] += (self.player.rect().centery - self.display.get_height() // 2 - self.scroll[1]) // 10
+            self.scroll[0] += (self.player.rect().centerx - 320 // 2 - self.scroll[0]) // 10
+            self.scroll[1] += (self.player.rect().centery - 240 // 2 - self.scroll[1]) // 10
 
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
@@ -105,10 +105,10 @@ class Game(modules.input.Input):
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_colecionaveis:
-                item.update(self.tilemap)
-                item.render(self.display, self.scroll)
                 #desenhar area de colisao
                 pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
+                item.update(self.tilemap)
+                item.render(self.display, self.scroll)
 
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     item.coletado = True
@@ -163,7 +163,7 @@ class Game(modules.input.Input):
 
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))
+            self.screen.blit(pygame.transform.scale(self.display, (self.width, self.height)), (0,0))
             # Atualiza a tela
             
             #pygame.display.update()

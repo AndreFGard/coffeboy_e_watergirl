@@ -2,11 +2,10 @@ import pygame
 from modules.utils import sum_vectors, subtract_vectors
 from modules.tilemap import Tilemap
 class PhysicsEntity:
-    def __init__(self, game, e_type, pos, size):
+    def __init__(self, game, e_type, pos, size=()):
         self.game = game
         self.type = e_type
         self.pos = list(pos)
-        self.size = size
         self.velocity = [0,0]
 
         self.action = ''
@@ -19,7 +18,7 @@ class PhysicsEntity:
         #pra caso ele esteja virado pro outro lado
         self.flip = False
         self.set_action('idle')
-
+        self.size = size or self.animation.get_size()
 
     def set_action(self, action):
         if action != self.action:

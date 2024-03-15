@@ -1,4 +1,10 @@
 
+## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
+- conserto definitivo do problema da colisao dos sprites, alcançado através da associação automática do tamanho do sprite ao tamanho da hitbox e da renovação dos sprites das moedas
+
+## \<frqal\> [0.0.17] - 2024-03-14 &ensp;
+- renovação dos sprites das moedas
+
 ## \<afs15\> [0.0.16] - 2024-03-14 &ensp;
 - pequena otimização através do uso de elifs
 - ajuste do tamanho da janela do jogo à tela do jogador
