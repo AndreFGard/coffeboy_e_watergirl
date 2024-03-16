@@ -46,14 +46,18 @@ class Game(modules.input.Input):
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
             'moeda/idle': Animation(load_images("coins"), img_dur=4),
             'moeda': load_image("coins/00.png"),
-            'Grão de Café': load_image("hud/inventory/coffee_beans/00.png"),
-            'Grão de Café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
-            'Água quente': load_image("hud/inventory/water_cup/00.png"),
-            'Água quente/idle':Animation([pygame.transform.scale(load_image("hud/inventory/water_cup/00.png"), (17,17))]),
+            'grao_de_cafe': load_image("hud/inventory/coffee_beans/00.png"),
+            'grao_de_cafe/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
+            'agua_quente': load_image("hud/inventory/water_cup/00.png"),
+            'agua_quente/idle':Animation([pygame.transform.scale(load_image("hud/inventory/water_cup/00.png"), (17,17))]),
+            'botas': load_image("buffs/boots/00.png"),
+            'botas/idle':Animation([pygame.transform.scale(load_image("buffs/boots/00.png"), (17,17))]),
+            'raio': load_image("buffs/lightning/00.png"),
+            'raio/idle':Animation([pygame.transform.scale(load_image("buffs/lightning/00.png"), (17,17))]),
             
-            # O copo de café não é coletável, seria usado no fim da fase para 'transformar' os coletados no copo de café (objetivo)
-            'Copo de café': load_image("hud/inventory/coffee_cup/00.png"),
-            'Copo de café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_cup/00.png"), (17,17))]),
+            # O copo_de_cafe não é coletável, seria usado no fim da fase para 'transformar' os coletados no copo_de_cafe (objetivo)
+            'copo_de_cafe': load_image("buffs/coffee/00.png"),
+            'copo_de_cafe/idle':Animation([pygame.transform.scale(load_image("buffs/coffee/00.png"), (17,17))]),
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), ())
@@ -61,11 +65,11 @@ class Game(modules.input.Input):
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
 
         item1 = Item(self, 'moeda', (80,50), ())
-        item2 = Item(self, 'Grão de Café', (100,50), ())
-        item3 = Item(self, 'Grão de Café', (120,50), ())
-        item4 = Item(self, 'Água quente', (150, 150), ())
-        buff_velocidade = Buff_velocidade(self, "moeda", (40, 50), ())
-        buff_pulo = Buff_pulo(self, 'Água quente', (200, 50), ())
+        item2 = Item(self, 'grao_de_cafe', (100,50), ())
+        item3 = Item(self, 'grao_de_cafe', (120,50), ())
+        item4 = Item(self, 'agua_quente', (150, 150), ())
+        buff_velocidade = Buff_velocidade(self, "raio", (140, 50), ())
+        buff_pulo = Buff_pulo(self, 'botas', (200, 50), ())
         self.itens_coletaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
 
         # parâmetros gerais do inventário
