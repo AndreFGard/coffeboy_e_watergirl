@@ -1,6 +1,7 @@
 import pygame
 NEIGHBOR_OFFSET = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(0,0),(-1,1),(0,1),(1,1),]
 COLLIDABLE_TILE_TYPES = {"grass", "stone"}
+GAMEOVER_BLOCK_TYPES = {"tea"}
 from modules.utils import sum_vectors, k_vector
 import json
 

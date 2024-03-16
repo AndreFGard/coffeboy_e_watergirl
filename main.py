@@ -35,7 +35,8 @@ class Game(modules.input.Input):
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
-            'player': load_image('entities/player/idle/00.png'),
+            'tea' : load_images('tiles/tea'),
+            'player': load_image("entities/player/idle/00.png"),
             'background': load_image("Background2.png"),
             'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
             'player/run': Animation(load_images('entities/player/run'), img_dur=4),
@@ -49,7 +50,7 @@ class Game(modules.input.Input):
             
             }
         #print(self.assets)
-        self.player = Player(self, (50, 50), (8, 15))
+        self.player = Player(self, (50, 50), ())
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         item1 = Item(self, 'moeda', (80,50), tamanho=())
@@ -104,7 +105,8 @@ class Game(modules.input.Input):
 
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-
+            pygame.draw.rect(self.display, (255,100,0), self.player.rect_with_offset(self.scroll))
+            self.player.render(self.display, offset=self.scroll) 
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_coletaveis:
@@ -162,13 +164,13 @@ class Game(modules.input.Input):
                 
                     
 
-            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
+            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 32))
 
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter
             self.screen.blit(pygame.transform.scale(self.display, (self.width, self.height)), (0,0))
             # Atualiza a tela
-            self.player.render(self.screen, offset=self.scroll, coordinate_system_scale=4)            
+                       
             #pygame.display.update()
             
             clock.tick(60)
