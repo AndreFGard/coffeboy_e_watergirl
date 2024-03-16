@@ -1,13 +1,16 @@
 import pygame
 import pyguix.ui.elements as ui
 import sys
-from modules.entities import ItemColecionavel
+from modules.utils import load_image
+from modules.entities import Itemcoletavel
 
 # Configurações da tela
 width, height = 1280, 960
 screen = pygame.display.set_mode((width, height))
 
-class Item(ItemColecionavel): # representa os itens que podem ser armazenados no inventário
+ITEM_TAMANHO = 60
+
+class Item(Itemcoletavel): # representa os itens que podem ser armazenados no inventário
     def __init__(self, game, name, posicao, tamanho,):
         super().__init__(game, name, posicao, tamanho)
         self.name = name
@@ -21,7 +24,10 @@ class InventorySlot: # representa um slot individual no inventário.
         self.item = None
         self.quantity = 0
 
-    def set_item(self, item):
+    def set_item(self, item:Item):
+        # Ajusta o tamanho desejado da imagem do item (por exemplo, 60x60 pixels)
+        item.image = pygame.transform.scale(item.image, (ITEM_TAMANHO, ITEM_TAMANHO))
+
         if self.item and self.item.name == item.name:
             self.quantity += 1  # Se o item já estiver no slot, aumente a quantidade
         else:
@@ -36,6 +42,11 @@ class Inventory: # representa o inventário como um todo.
     def __init__(self, capacity):
         self.capacity = capacity
         self.slots = []
+
+        slot_image = load_image("hud/inventory/empty_slot.png")
+        slot_width = slot_height = 110
+        self.slot_image =  pygame.transform.scale(slot_image, (slot_width, slot_height))
+
 
     def add_slot(self, slot):
         self.slots.append(slot)
@@ -59,12 +70,16 @@ class Inventory: # representa o inventário como um todo.
             print("Slot inválido/sem slots restando")
 
     
+    # def resize_slots_to(self, slot_width=110, slot_height=110):
+    #     self.slots = list(map(pygame.trans))
+            
         
     # Função para desenhar o inventário na tela
-    def draw_inventory(self, inventory):
+    def draw_inventory(self, game):
         # Carrega a imagem do slot
-        slot_image = pygame.image.load("./data/images/hud/inventory/empty_slot.png")
-        
+        slot_image = self.slot_image
+        inventory = self
+
         # Ajusta as dimensões do retângulo do slot (por exemplo, 80x80 pixels)
         slot_width = 110
         slot_height = 110
@@ -80,22 +95,19 @@ class Inventory: # representa o inventário como um todo.
             
         for i, slot in enumerate(inventory.slots):
             # Ajuste as dimensões da imagem do slot (por exemplo, 60x60 pixels)
-            slot_image = pygame.transform.scale(slot_image, (slot_width, slot_height))
             
             # Mostra a imagem do slot
-            self.screen.blit(slot_image, (start_x + i * (slot_width + slot_spacing), slot.y))
+            game.screen.blit(slot_image, (start_x + i * (slot_width + slot_spacing), slot.y))
 
             if slot.item:
                 item_image = slot.item.image
-                
-                # Ajusta o tamanho desejado da imagem do item (por exemplo, 60x60 pixels)
-                item_image = pygame.transform.scale(item_image, (60, 60))
+
 
                 # Calcula as coordenadas para centralizar a imagem do item dentro do slot
                 item_x = start_x + i * (slot_width +slot_spacing) + (slot_width - item_image.get_width()) // 2
                 item_y = slot.y + (slot_height - item_image.get_height()) // 2
 
-                self.screen.blit(item_image, (item_x, item_y))  # Mostra a imagem do item no slot
+                game.screen.blit(item_image, (item_x, item_y))  # Mostra a imagem do item no slot
                 
                 if slot.quantity > 0:
                     font_path = './data/font/MadimiOne-Regular.ttf'
@@ -103,7 +115,7 @@ class Inventory: # representa o inventário como um todo.
                     quantity_text = font.render(str(slot.quantity), True, (48, 39, 32))
                     #quantity_text = font.render(str(slot.quantity), True, (0,0,0))
                     quantity_rect = quantity_text.get_rect(center=(item_x + 30, item_y + 82))
-                    self.screen.blit(quantity_text, quantity_rect.topleft)
+                    game.screen.blit(quantity_text, quantity_rect.topleft)
 
                 
 

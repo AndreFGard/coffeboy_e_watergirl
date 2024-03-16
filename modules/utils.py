@@ -45,6 +45,9 @@ class Animation:
     def copy(self):
         return Animation(self.images, self.img_dur, self.loop)
 
+    def get_size(self):
+        return self.images[0].get_size()
+    
     def update(self):
         if self.loop:
             #isto GARANTE que nao iremos pegar um frame a mais do que devemos, mas sim que

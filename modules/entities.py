@@ -1,12 +1,11 @@
 import pygame
-from modules.utils import sum_vectors, subtract_vectors
+from modules.utils import sum_vectors, subtract_vectors, k_vector
 from modules.tilemap import Tilemap
 class PhysicsEntity:
-    def __init__(self, game, e_type, pos, size):
+    def __init__(self, game, e_type, pos, size=()):
         self.game = game
         self.type = e_type
         self.pos = list(pos)
-        self.size = size
         self.velocity = [0,0]
 
         self.action = ''
@@ -20,7 +19,7 @@ class PhysicsEntity:
         #pra caso ele esteja virado pro outro lado
         self.flip = False
         self.set_action('idle')
-
+        self.size = size or self.animation.get_size()
 
     def set_action(self, action):
         if action != self.action:
@@ -91,11 +90,14 @@ class PhysicsEntity:
 
         self.animation.update()
 
-    def render(self, surface: pygame.Surface, offset):
+    def render(self, surface: pygame.Surface, offset, coordinate_system_scale=1):
         """renders the entity in the passed surface"""
+        #o coordinate_system_scale permite que se renderize a entidade
+        #num espaço de coordenadas onde tudo é maior do que o espaço onde existe a entidade
         surface.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
-                     sum_vectors(subtract_vectors(self.pos, offset),
-                                 self.anim_offset))
+                     k_vector(coordinate_system_scale,
+                        sum_vectors(subtract_vectors(self.pos, offset),
+                                    self.anim_offset)))
 
         # pygame.draw.rect(surface, (0,0,150), pygame.Rect(self.pos[0] -offset[0], self.pos[1] -offset[1], self.size[0], self.size[1]) )
         # surface.blit(self.game.assets['player'], 
@@ -104,7 +106,7 @@ class PhysicsEntity:
 
 class AnimatedSimplePhysicsEntity(PhysicsEntity):
     def __init__(self, game, pos, size):
-        super().__init__(game, 'colecionavel', pos, size)
+        super().__init__(game, 'coletavel', pos, size)
 
         #tempo que passou no ar
         self.air_time = 0
@@ -135,7 +137,7 @@ class Player(PhysicsEntity):
             self.set_action('idle')
 
         
-class ItemColecionavel(PhysicsEntity):
+class Itemcoletavel(PhysicsEntity):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         if not tamanho:
             tamanho = game.assets[tipo + "/" + "idle"].size
@@ -158,6 +160,7 @@ class ItemColecionavel(PhysicsEntity):
     #     """Renderiza o item colecionável"""
     #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
+
 
 class Buff_velocidade(ItemColecionavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
