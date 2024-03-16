@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff_velocidade, Buff_pulo
+from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff_velocidade, Buff_pulo
 
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
@@ -66,7 +66,7 @@ class Game(modules.input.Input):
         item4 = Item(self, 'Água quente', (150, 150), ())
         buff_velocidade = Buff_velocidade(self, "moeda", (40, 50), ())
         buff_pulo = Buff_pulo(self, 'Água quente', (200, 50), ())
-        self.itens_colecionaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
+        self.itens_coletaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
 
         # parâmetros gerais do inventário
         slot1 = InventorySlot(100, 800)
@@ -198,10 +198,15 @@ class Game(modules.input.Input):
             self.scroll[0] += (self.player.rect().centerx - 320 // 2 - self.scroll[0]) // 10
             self.scroll[1] += (self.player.rect().centery - 240 // 2 - self.scroll[1]) // 10
 
+            #renderizar o mapa
             self.tilemap.render(self.display, offset=self.scroll)
+
+            #atualizar a posicao do player e renderizá-lo
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
             pygame.draw.rect(self.display, (255,100,0), self.player.rect_with_offset(self.scroll))
             self.player.render(self.display, offset=self.scroll) 
+
+
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_coletaveis:
@@ -260,7 +265,7 @@ class Game(modules.input.Input):
                 
                     
 
-            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 32))
+            #pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 32))
 
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter

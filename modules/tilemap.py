@@ -11,7 +11,7 @@ def pos_in_pixels(posicao_tilemap, tile_size=16):
     return tuple(map(lambda x: x*tile_size, posicao_tilemap))
 
 class Tilemap:
-    def __init__(self, game, map_filename="", tile_size=16):
+    def __init__(self, game, map_filename="", tile_size=16, newmapname=None):
         self.game = game
         self.tile_size = tile_size
         #temos dois sistemas: um que é em uma grid (grade)
@@ -19,6 +19,8 @@ class Tilemap:
         #e outro que pode nao estar alinhado à grade
         #esses offgrids sao decoracoes, background, basicamente
         self.offgrid_tiles = []
+
+        self.newmapname = newmapname
 
 
         # preenchendo o mapa
@@ -42,7 +44,7 @@ class Tilemap:
                 self.tilemap["10;" + str(5 + i)] = {'type': 'stone', 'variant': 1, 'pos': (10, 5 + i)}       
 
     def __dump_map__(self):
-        newmap_filename = "newmap.json"
+        newmap_filename = self.newmapname
         raiz = {}
         raiz['tile_size'] = self.tile_size
         raiz['tilemap'] = self.tilemap

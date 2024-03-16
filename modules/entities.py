@@ -12,7 +12,7 @@ class PhysicsEntity:
         self.apply_gravity = True
         #esse offset tira o padding que as imagens das animacoes tem como margem
         # pra representar seus movimentos
-        self.anim_offset = (-3, -3)
+        self.anim_offset = (0, 0)
         self.movement_multiplier = 1
         self.velocidade_pulo = -3
         
@@ -95,9 +95,8 @@ class PhysicsEntity:
         #o coordinate_system_scale permite que se renderize a entidade
         #num espaço de coordenadas onde tudo é maior do que o espaço onde existe a entidade
         surface.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
-                     k_vector(coordinate_system_scale,
                         sum_vectors(subtract_vectors(self.pos, offset),
-                                    self.anim_offset)))
+                                    self.anim_offset))
 
         # pygame.draw.rect(surface, (0,0,150), pygame.Rect(self.pos[0] -offset[0], self.pos[1] -offset[1], self.size[0], self.size[1]) )
         # surface.blit(self.game.assets['player'], 
@@ -162,7 +161,7 @@ class Itemcoletavel(PhysicsEntity):
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
 
-class Buff_velocidade(ItemColecionavel):
+class Buff_velocidade(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True
@@ -192,7 +191,7 @@ class Buff_velocidade(ItemColecionavel):
                 return False
         return True
     
-class Buff_pulo(ItemColecionavel):
+class Buff_pulo(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True
