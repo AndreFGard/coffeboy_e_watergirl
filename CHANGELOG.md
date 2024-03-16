@@ -1,7 +1,7 @@
+
 ## \<afs15\> [0.0.19] - 2024-03-15 &ensp;
 - melhora de no mínimo 17% no desempenho atraves da remocao de uma transformacao de tamanho dos itens do inventario que se repetia a cada frame
 - permitir que o player seja de maior resolução através da adicao do parametro coordinate_system_scale ao metodo render das entidades físicas
-
 
 ## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
 - conserto definitivo do problema da colisao dos sprites, alcançado através da associação automática do tamanho do sprite ao tamanho da hitbox e da renovação dos sprites das moedas
@@ -25,8 +25,11 @@
 - adicionando inventário na tela
 - interação dinâmica entre os coletáveis no mapa e o inventário
 
-## \<afs15\> [0.0.13] - 2024-02-29 &ensp;
+## \<bpas\> [0.0.14] - 2024-03-03 &ensp;
+- adicionando inventário na tela
+- interação dinâmica entre os coletáveis no mapa e o inventário
 
+## \<afs15\> [0.0.13] - 2024-02-29 &ensp;
 - animacoes 100% custom aos coletaveis
 
 ## \<rgar\> [0.0.12] - 2024-02-29 &ensp;
