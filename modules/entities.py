@@ -161,7 +161,7 @@ class Itemcoletavel(PhysicsEntity):
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
 
-class Buff_velocidade(ItemColecionavel):
+class Buff_velocidade(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True
@@ -191,7 +191,7 @@ class Buff_velocidade(ItemColecionavel):
                 return False
         return True
     
-class Buff_pulo(ItemColecionavel):
+class Buff_pulo(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True

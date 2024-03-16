@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff_velocidade, Buff_pulo
+from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff_velocidade, Buff_pulo
 
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
@@ -66,7 +66,7 @@ class Game(modules.input.Input):
         item4 = Item(self, 'Água quente', (150, 150), ())
         buff_velocidade = Buff_velocidade(self, "moeda", (40, 50), ())
         buff_pulo = Buff_pulo(self, 'Água quente', (200, 50), ())
-        self.itens_colecionaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
+        self.itens_coletaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
 
         # parâmetros gerais do inventário
         slot1 = InventorySlot(100, 800)
