@@ -52,12 +52,58 @@ class Game(modules.input.Input):
         #esse é o offset da camera
         self.scroll = [0,0]
 
+        self.font = pygame.font.SysFont(None, 10)  # Definindo a fonte para o timer
+
+        self.tela_inicio()
+
         #preparar o background
-        self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
+        self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())\
+        
 
+    def tela_inicio(self):
+        font_title = pygame.font.Font(None, 64)
+        font_button = pygame.font.Font(None, 32)
 
+        # Nome do jogo
+        game_title = font_title.render("Coffeboy e Watergirl", True, (255, 255, 255))
+        title_rect = game_title.get_rect(center=(self.width//2, self.height//4))
+
+        # Botão Iniciar
+        start_button_text = font_button.render("Iniciar", True, (90, 65, 112))
+        start_button_rect = start_button_text.get_rect(center=(self.width//2, self.height//2))
+
+        # Botão Sair
+        quit_button_text = font_button.render("Sair", True, (90, 65, 112))
+        quit_button_rect = quit_button_text.get_rect(center=(self.width//2, self.height * 3//4))
+
+        while True:
+            self.screen.fill((0, 0, 0))  # Preencha a tela com preto
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if start_button_rect.collidepoint(event.pos):
+                        self.run()  # Inicie o jogo
+                    elif quit_button_rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
+
+            # Desenha o nome do jogo
+            self.screen.blit(game_title, title_rect)
+
+            # Desenha os botões
+            pygame.draw.rect(self.screen, (0, 0, 0, 0), start_button_rect, border_radius=10)
+            pygame.draw.rect(self.screen, (0, 0, 0, 0), quit_button_rect, border_radius=10)
+            self.screen.blit(start_button_text, start_button_rect)
+            self.screen.blit(quit_button_text, quit_button_rect)
+
+            pygame.display.flip()
     def run(self):
         clock = pygame.time.Clock()
+
+        start_time = pygame.time.get_ticks()  # Obtendo o tempo de início
 
         while True:
             #self.display.fill((200,200,255))
@@ -86,6 +132,9 @@ class Game(modules.input.Input):
 
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
+            elapsed_time = pygame.time.get_ticks() - start_time  # Calculando o tempo decorrido
+            timer_text = self.font.render(f"Tempo: {elapsed_time // 1000} s", True, (0,0,0))
+            self.display.blit(timer_text, (10, 18))  # Renderizando o texto do timer no canto superior esquerdo
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
