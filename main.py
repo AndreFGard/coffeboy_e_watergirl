@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff
+from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff_velocidade, Buff_pulo
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -58,8 +58,9 @@ class Game(modules.input.Input):
         item2 = Item(self, 'Grão de Café', (100,50), (8,15))
         item3 = Item(self, 'Grão de Café', (120,50), (8,15))
         item4 = Item(self, 'Água quente', (150, 150), (8,15))
-        buff1 = Buff(self, "moeda", (40, 50), (8,15))
-        self.itens_colecionaveis = [item1,item2, item3, item4, buff1]
+        buff_velocidade = Buff_velocidade(self, "moeda", (40, 50), (8,15))
+        buff_pulo = Buff_pulo(self, 'Água quente', (200, 50), (8,15))
+        self.itens_colecionaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
         self.inventario = []
 
         #esse é o offset da camera
@@ -232,7 +233,7 @@ class Game(modules.input.Input):
                     if event.key == pygame.K_RIGHT:
                         self.movement[1] = True
                     if event.key == pygame.K_UP:
-                        self.player.velocity[1] = -3
+                        self.player.velocity[1] = self.player.velocidade_pulo
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
