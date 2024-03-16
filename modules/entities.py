@@ -14,6 +14,7 @@ class PhysicsEntity:
         # pra representar seus movimentos
         self.anim_offset = (-3, -3)
         self.movement_multiplier = 1
+        self.velocidade_pulo = -3
         
         #pra caso ele esteja virado pro outro lado
         self.flip = False
@@ -160,7 +161,8 @@ class Itemcoletavel(PhysicsEntity):
     #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
-class Buff(Itemcoletavel):
+
+class Buff_velocidade(ItemColecionavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True
@@ -179,6 +181,36 @@ class Buff(Itemcoletavel):
     def __remove_buff(self, target:PhysicsEntity):
         """Apenas um exemplo da reversão de um buff"""
         target.movement_multiplier = 1
+
+    def update(self, tilemap: Tilemap, movement=(0,0)):
+        """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""
+        super().update(tilemap, movement)
+        if self.applying:
+            self.validity -= 1
+            if self.validity < 0:
+                self.__remove_buff(self.target)
+                return False
+        return True
+    
+class Buff_pulo(ItemColecionavel):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
+        self.is_buff = True
+        
+        #se o buff esta sendo aplicado agora
+        self.applying = False
+        #tempo em frames durante o qual o target sera afetado pelo buff
+        self.validity = 10 * 60
+
+    def apply_to_target(self, target:PhysicsEntity):
+        """Apenas um exemplo do que um buff faria a um jogador"""
+        self.target = target
+        self.applying = True
+        target.velocidade_pulo -= 3
+
+    def __remove_buff(self, target:PhysicsEntity):
+        """Apenas um exemplo da reversão de um buff"""
+        target.velocidade_pulo = -3
 
     def update(self, tilemap: Tilemap, movement=(0,0)):
         """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""
