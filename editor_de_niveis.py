@@ -41,7 +41,7 @@ class Game(modules.input.Input):
             }
         #print(self.assets)
         self.player = Player(self, (0, 0), (8, 15))
-        self.tilemap = Tilemap(self, map_filename="data/maps/1.json", tile_size=16)
+        self.tilemap = Tilemap(self, map_filename="data/maps/1.json", tile_size=16, newmapname="newmap.json")
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         #esse é o offset da camera
         self.scroll = [0,0]
@@ -133,10 +133,17 @@ class Game(modules.input.Input):
                             self.tilemap.tilemap.pop(pos_tilemap) 
 
                         #print(selected_tile)
-            
+
             if selected_tile:
-                #se se
+                font_path = './data/font/MadimiOne-Regular.ttf'
+                font = pygame.font.Font(font_path, 15)
+
+
+
                 self.display.blit(self.assets[selected_tile['type']][selected_tile['variant']], subtract_vectors(self.get_mouse_pos(), self.scroll))
+                block_caption = font.render(f"{selected_tile['type']} / {selected_tile['variant']}.png", True, (48, 39, 32))
+
+                self.display.blit(block_caption, subtract_vectors(self.get_mouse_pos(), self.scroll))
                 #pygame.draw.rect(self.display, (255,0,0), (*subtract_vectors(self.get_mouse_pos(), self.scroll),10, 16))
 
             pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
