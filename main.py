@@ -32,7 +32,8 @@ class Game(modules.input.Input):
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
-            'player': load_image('entities/player/idle/00.png'),
+            'tea' : load_images('tiles/tea'),
+            'player': load_image("entities/player/idle/00.png"),
             'background': load_image("Background2.png"),
             'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
             'player/run': Animation(load_images('entities/player/run'), img_dur=4),
@@ -106,7 +107,6 @@ class Game(modules.input.Input):
                 item.render(self.display, self.scroll)
             for item in self.itens_colecionaveis:
                 #desenhar area de colisao
-                pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
 
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     item.coletado = True
@@ -157,7 +157,7 @@ class Game(modules.input.Input):
                 
                     
 
-            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
+            pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 32))
 
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter

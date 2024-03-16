@@ -30,6 +30,7 @@ class Game(modules.input.Input):
             'grass': load_images('tiles/grass'),
             'large_decor': load_images('tiles/large_decor'),
             'stone': load_images('tiles/stone'),
+            'tea': load_images('tiles/tea'),
             'player': load_image('entities/player/idle/00.png'),
             'background': load_image("Background2.png"),
             'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
