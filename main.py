@@ -1,7 +1,8 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff
+from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff_velocidade, Buff_pulo
+
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -45,19 +46,27 @@ class Game(modules.input.Input):
             'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
             'moeda/idle': Animation(load_images("coins"), img_dur=4),
             'moeda': load_image("coins/00.png"),
-            "Grão de Café": load_image("hud/inventory/coffee_beans/00.png"),
+            'Grão de Café': load_image("hud/inventory/coffee_beans/00.png"),
             'Grão de Café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
+            'Água quente': load_image("hud/inventory/water_cup/00.png"),
+            'Água quente/idle':Animation([pygame.transform.scale(load_image("hud/inventory/water_cup/00.png"), (17,17))]),
             
+            # O copo de café não é coletável, seria usado no fim da fase para 'transformar' os coletados no copo de café (objetivo)
+            'Copo de café': load_image("hud/inventory/coffee_cup/00.png"),
+            'Copo de café/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_cup/00.png"), (17,17))]),
             }
         #print(self.assets)
         self.player = Player(self, (50, 50), ())
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = Item(self, 'moeda', (80,50), tamanho=())
-        item2 = Item(self, 'Grão de Café', (100,50), tamanho=())
-        item3 = Item(self, 'Grão de Café', (120,50), tamanho=())
-        buff1 = Buff(self, "moeda", (40, 50), tamanho=())
-        self.itens_coletaveis = [item1,item2, item3, buff1]
+
+        item1 = Item(self, 'moeda', (80,50), ())
+        item2 = Item(self, 'Grão de Café', (100,50), ())
+        item3 = Item(self, 'Grão de Café', (120,50), ())
+        item4 = Item(self, 'Água quente', (150, 150), ())
+        buff_velocidade = Buff_velocidade(self, "moeda", (40, 50), ())
+        buff_pulo = Buff_pulo(self, 'Água quente', (200, 50), ())
+        self.itens_colecionaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
 
         # parâmetros gerais do inventário
         slot1 = InventorySlot(100, 800)
@@ -67,6 +76,7 @@ class Game(modules.input.Input):
         self.inventory.add_slot(slot1)
         self.inventory.add_slot(slot2)
         self.inventory.add_slot(slot3)
+
         self.inventario = []
 
 
@@ -77,18 +87,103 @@ class Game(modules.input.Input):
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
         
         
-    
     def toggle_fullscreen(self):
         # Alterna entre o modo de tela cheia e o modo de janela
         self.is_fullscreen = not self.is_fullscreen
-
 
         if self.is_fullscreen:
             self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
         else:
             self.screen = pygame.display.set_mode((self.width, self.height))
+        
+    
+
+    def main_menu(self):
+        # Define as cores utilizadas no menu
+        color = (255, 255, 255)  # Cor do texto
+        color_light = (170, 170, 170)  # Cor quando o botão é destacado
+        color_dark = (100, 100, 100)  # Cor quando o botão não está destacado
+        
+        # Define a largura e a altura da janela do jogo
+        width = 1280
+        height = 960
+        
+        # Define a largura e a altura dos botões
+        button_width = 300
+        button_height = 100
+        
+        # Define o espaçamento vertical entre os botões
+        button_spacing = 20  
+        
+        # Define a fonte e o tamanho do texto dos botões
+        smallfont = pygame.font.SysFont('Corbel', 50)  
+        
+        # Lista de botões, contendo texto, posição e tamanho de cada botão
+        buttons = [
+            {"text": "Start", "position": (width / 2, height / 2 - button_height - button_spacing), 'tamanho': (button_width, button_height)},
+            {"text": "Quit", "position": (width / 2, height / 2 + button_spacing), 'tamanho': (button_width, button_height)}
+        ]
+
+        # Loop principal do menu
+        while True:
+            # Preenche a tela com uma cor de fundo
+            self.screen.fill((60, 25, 60))
             
-            
+            # Obtém a posição do mouse
+            mouse = pygame.mouse.get_pos()
+
+            # Itera sobre os botões na lista de botões
+            for button in buttons:
+                # Renderiza o texto do botão
+                text_rendered = smallfont.render(button["text"], True, color)
+                # Obtém o retângulo que envolve o texto, com centro na posição do botão
+                text_rect = text_rendered.get_rect(center=button["position"])
+
+                # Cria um retângulo para representar o botão
+                button_rect = pygame.Rect(button["position"][0] - button["tamanho"][0] / 2, button["position"][1] - button["tamanho"][1] / 2, button["tamanho"][0], button["tamanho"][1])
+
+                # Verifica se o mouse está sobre o botão
+                if button_rect.collidepoint(mouse):
+                    # Desenha o botão com uma cor mais clara se o mouse estiver sobre ele
+                    pygame.draw.rect(self.screen, color_light, button_rect)
+                else:
+                    # Desenha o botão com a cor padrão
+                    pygame.draw.rect(self.screen, color_dark, button_rect)
+
+                # Desenha o texto do botão na tela
+                self.screen.blit(text_rendered, text_rect)
+
+            # Loop para lidar com eventos do pygame
+            for event in pygame.event.get():
+                # Verifica se o evento é o fechamento da janela
+                if event.type == pygame.QUIT:
+                    # Fecha o jogo
+                    pygame.quit()
+                    sys.exit()
+                # Verifica se houve um clique do mouse
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Itera sobre os botões para verificar qual botão foi clicado
+                    for button in buttons:
+                        # Cria um retângulo para representar o botão
+                        button_rect = pygame.Rect(button["position"][0] - button["tamanho"][0] / 2, button["position"][1] - button["tamanho"][1] / 2, button["tamanho"][0], button["tamanho"][1])
+                        # Verifica se o clique do mouse ocorreu dentro do retângulo do botão
+                        if button_rect.collidepoint(event.pos):
+                            # Verifica se o botão "Quit" foi clicado
+                            if button["text"] == "Quit":
+                                # Fecha o jogo
+                                pygame.quit()
+                                sys.exit()
+                            # Verifica se o botão "Start" foi clicado
+                            elif button["text"] == "Start":
+                                # Inicia o jogo
+                                #print("Starting the game...")  
+                                Game.run(self)
+
+            # Atualiza a tela
+            pygame.display.update()
+
+
+
     def run(self):
         clock = pygame.time.Clock()
 
@@ -153,7 +248,8 @@ class Game(modules.input.Input):
                     elif event.key == pygame.K_RIGHT:
                         self.movement[1] = True
                     elif event.key == pygame.K_UP:
-                        self.player.velocity[1] = -3
+                        self.player.velocity[1] = self.player.velocidade_pulo
+                        
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
@@ -180,8 +276,6 @@ class Game(modules.input.Input):
             
             clock.tick(60)
             self.draw_invent()  # mostra o inventário na tela
-            
-            
 
 
     def draw_invent(self):
@@ -199,4 +293,4 @@ class Game(modules.input.Input):
 
 
 
-Game().run()
+Game().main_menu()
