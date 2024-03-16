@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, ItemColecionavel, Buff
+from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
 def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
@@ -10,10 +10,13 @@ from modules.hud import Item, InventorySlot, Inventory, pause_menu
 class Game(modules.input.Input):
     def __init__(self):
         modules.input.Input.__init__(self)
-        self.width = 1280
-        self.height = 960
+
         self.is_fullscreen = False
-    
+        host_screen_height, host_screen_width = pygame.display.Info().current_h, pygame.display.Info().current_w
+
+        self.width = min(1280, host_screen_width)
+        self.height = min(960, host_screen_height)
+
         pygame.init()
         pygame.display.set_caption("coffeboy e watergirl")
 
@@ -47,15 +50,25 @@ class Game(modules.input.Input):
             
             }
         #print(self.assets)
-        self.player = Player(self, (50, 50), (8, 15))
+        self.player = Player(self, (50, 50), ())
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
-        item1 = Item(self, 'moeda', (80,50), (8,15))
-        item2 = Item(self, 'Grão de Café', (100,50), (8,15))
-        item3 = Item(self, 'Grão de Café', (120,50), (8,15))
-        buff1 = Buff(self, "moeda", (40, 50), (8,15))
-        self.itens_colecionaveis = [item1,item2, item3, buff1]
+        item1 = Item(self, 'moeda', (80,50), tamanho=())
+        item2 = Item(self, 'Grão de Café', (100,50), tamanho=())
+        item3 = Item(self, 'Grão de Café', (120,50), tamanho=())
+        buff1 = Buff(self, "moeda", (40, 50), tamanho=())
+        self.itens_coletaveis = [item1,item2, item3, buff1]
+
+        # parâmetros gerais do inventário
+        slot1 = InventorySlot(100, 800)
+        slot2 = InventorySlot(200, 800)
+        slot3 = InventorySlot(300, 800)
+        self.inventory = Inventory(3)
+        self.inventory.add_slot(slot1)
+        self.inventory.add_slot(slot2)
+        self.inventory.add_slot(slot3)
         self.inventario = []
+
 
         #esse é o offset da camera
         self.scroll = [0,0]
@@ -79,14 +92,7 @@ class Game(modules.input.Input):
     def run(self):
         clock = pygame.time.Clock()
 
-        # parâmetros gerais do inventário
-        slot1 = InventorySlot(100, 800)
-        slot2 = InventorySlot(200, 800)
-        slot3 = InventorySlot(300, 800)
-        inventory = Inventory(3)
-        inventory.add_slot(slot1)
-        inventory.add_slot(slot2)
-        inventory.add_slot(slot3)
+
     
         while True:
             #self.display.fill((200,200,255))
@@ -94,19 +100,20 @@ class Game(modules.input.Input):
 
 
             #dividir por 2 pra que fique no meio
-            self.scroll[0] += (self.player.rect().centerx - self.display.get_width() // 2 - self.scroll[0]) // 10
-            self.scroll[1] += (self.player.rect().centery - self.display.get_height() // 2 - self.scroll[1]) // 10
+            self.scroll[0] += (self.player.rect().centerx - 320 // 2 - self.scroll[0]) // 10
+            self.scroll[1] += (self.player.rect().centery - 240 // 2 - self.scroll[1]) // 10
 
             self.tilemap.render(self.display, offset=self.scroll)
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            self.player.render(self.display, offset=self.scroll)
+            pygame.draw.rect(self.display, (255,100,0), self.player.rect_with_offset(self.scroll))
+            self.player.render(self.display, offset=self.scroll) 
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
-            for item in self.itens_colecionaveis:
+            for item in self.itens_coletaveis:
+                #desenhar area de colisao
+                pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
                 item.update(self.tilemap)
                 item.render(self.display, self.scroll)
-            for item in self.itens_colecionaveis:
-                #desenhar area de colisao
 
                 if not item.coletado and self.player.rect().colliderect(item.rect()):
                     item.coletado = True
@@ -117,9 +124,9 @@ class Game(modules.input.Input):
                         item.apply_to_target(self.player)
                     else:    
                         self.inventario.append(item)
-                        inventory.add_item_to_slot(item, 0)
+                        self.inventory.add_item_to_slot(item, 0)
                     # Remova o item da lista de itens colecionáveis
-                    self.itens_colecionaveis.remove(item)
+                    self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
             #atualizar os buffs
@@ -135,24 +142,24 @@ class Game(modules.input.Input):
                     pygame.quit()
                     sys.exit()
                 # Movimentação do personagem
-                if event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
-                    if event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT:
                         self.movement[1] = True
-                    if event.key == pygame.K_UP:
+                    elif event.key == pygame.K_UP:
                         self.player.velocity[1] = -3
-                if event.type == pygame.KEYUP:
+                elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = False
-                    if event.key == pygame.K_RIGHT:
+                    elif event.key == pygame.K_RIGHT:
                         self.movement[1] = False
                         
                 # Fullscreen e pause
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_m:
                         self.toggle_fullscreen()
-                    if event.key == pygame.K_ESCAPE:
+                    elif event.key == pygame.K_ESCAPE:
                         pause_menu(self)
                 
                     
@@ -161,20 +168,20 @@ class Game(modules.input.Input):
 
             # isto aqui é o que escala o display pra screen (A tela de vdd)
             # e escreve na tela as alteracoes que fizemos, a cada iter
-            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0,0))
+            self.screen.blit(pygame.transform.scale(self.display, (self.width, self.height)), (0,0))
             # Atualiza a tela
-            
+                       
             #pygame.display.update()
             
             clock.tick(60)
-            self.draw_invent(inventory)  # mostra o inventário na tela
+            self.draw_invent()  # mostra o inventário na tela
             
             
 
 
-    def draw_invent(self, inventory):
+    def draw_invent(self):
         # Atualizando o inventário
-        Inventory.draw_inventory(self, inventory)
+        self.inventory.draw_inventory(self)
         pygame.display.flip()
 
         

@@ -1,21 +1,35 @@
-4<<<<<<< HEAD
-## \<afs15\> [0.0.14] - 2024-03-06 &ensp;
-- criar o tipo primitivo dos buffs
+
+## \<afs15\> [0.0.19] - 2024-03-15 &ensp;
+- melhora de no mínimo 17% no desempenho atraves da remocao de uma transformacao de tamanho dos itens do inventario que se repetia a cada frame
+- permitir que o player seja de maior resolução através da adicao do parametro coordinate_system_scale ao metodo render das entidades físicas
+
+## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
+- conserto definitivo do problema da colisao dos sprites, alcançado através da associação automática do tamanho do sprite ao tamanho da hitbox e da renovação dos sprites das moedas
+- mudança da nomenclatura das variáveis dos itens coletaveis para que ela seja mais semanticamente adequada 
+
+## \<frqal\> [0.0.17] - 2024-03-14 &ensp;
+- renovação dos sprites das moedas
+
+## \<afs15\> [0.0.16] - 2024-03-14 &ensp;
+- pequena otimização através do uso de elifs
+- ajuste do tamanho da janela do jogo à tela do jogador
+
+## \<afs15\> [0.0.15] - 2024-03-06 &ensp;
+- criar a classe dos buffs
 - tentativa de consertar as colisoes incoerentes com os sprites (falha)
 
-## \<bpas\> [0.0.13] - 2024-03-01 &ensp;
+## \<bpas\> [0.0.14] - 2024-03-01 &ensp;
 - adicionar a UI
 - adicionar o HUD do inventário
 - tornar os itens coletáveis coletáveis de verdade
+- adicionando inventário na tela
+- interação dinâmica entre os coletáveis no mapa e o inventário
 
-## \<afs15\> [0.0.12] - 2024-02-29 &ensp;
-=======
 ## \<bpas\> [0.0.14] - 2024-03-03 &ensp;
 - adicionando inventário na tela
 - interação dinâmica entre os coletáveis no mapa e o inventário
 
 ## \<afs15\> [0.0.13] - 2024-02-29 &ensp;
->>>>>>> main
 - animacoes 100% custom aos coletaveis
 
 ## \<rgar\> [0.0.12] - 2024-02-29 &ensp;
