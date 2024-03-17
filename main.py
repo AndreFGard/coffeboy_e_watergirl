@@ -91,6 +91,8 @@ class Game(modules.input.Input):
         self.active_buffs = []
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
+
+        self.total_time = 30 * 1000
         
         
     def toggle_fullscreen(self):
@@ -130,6 +132,7 @@ class Game(modules.input.Input):
             {"text": "Quit", "position": (width / 2, height / 2 + button_spacing), 'tamanho': (button_width, button_height)}
         ]
 
+        minimalfont = pygame.font.SysFont('Corbel', 30)
         # Loop principal do menu
         while True:
             # Preenche a tela com uma cor de fundo
@@ -138,6 +141,12 @@ class Game(modules.input.Input):
             # Obtém a posição do mouse
             mouse = pygame.mouse.get_pos()
 
+            instrucoes = {f"Você tem {self.total_time // 1000} segundos pra tomar o seu café a tempo da prova de cálculo", "Rápido, pegue moedas, café e água quente e vá correndo pra área II!"}
+            
+            h = 100
+            for surf in tuple(map(lambda txt: minimalfont.render(txt,True, color), instrucoes)):
+                h += 60
+                self.screen.blit(surf,(self.width//4, h))
             # Itera sobre os botões na lista de botões
             for button in buttons:
                 # Renderiza o texto do botão
@@ -195,7 +204,6 @@ class Game(modules.input.Input):
         dialog_message = ""  # Variável para armazenar a mensagem do balão de diálogo
         start_time = pygame.time.get_ticks()  # Obtendo o tempo de início
         # tempo maximo para ganhar o jogo(colocar a qts em segundos antes da multiplicacao)
-        total_time = 30 * 1000
 
         # essas 2 variaveis vao controlar o tempo para o jogo fechar
         contador = 0
@@ -227,7 +235,7 @@ class Game(modules.input.Input):
             #renderizar o timer
             if pontuacao_ == False:
                 elapsed_time = pygame.time.get_ticks() - start_time
-                remaining_time = max((total_time - elapsed_time) // 1000, 0)
+                remaining_time = max((self.total_time - elapsed_time) // 1000, 0)
                 timer_text = self.font.render(f"Tempo restante: {remaining_time} s", True, (0, 0, 100))
                  
             
@@ -322,7 +330,7 @@ class Game(modules.input.Input):
                     sys.exit()
             # coloquei esse else pq essa mensagem de derrota apareca bem no final antes de fechar o programa quando ganhava
             else:
-                if pygame.time.get_ticks() - start_time >= total_time:
+                if pygame.time.get_ticks() - start_time >= self.total_time:
                     self.movement = [False, False]
                     lose_x = self.player.rect().right + 20
                     lose_y = self.player.rect().top - 50
@@ -382,7 +390,7 @@ class Game(modules.input.Input):
                 self.screen.blit(dialog_text, k_vector(self.render_scale, dialog_rect.topleft))  # Renderiza o texto na tela
                 self.screen.blit(victory_text, k_vector(self.render_scale, victory_rect.topleft))
                 self.screen.blit(pontuacao_text, k_vector(self.render_scale, countdown_rect.topleft))
-            elif pygame.time.get_ticks() - start_time >= total_time:
+            elif pygame.time.get_ticks() - start_time >= self.total_time:
                 if lose_text: 
                     self.screen.blit(lose_text, k_vector(self.render_scale, lose_rect.topleft))
             self.screen.blit(timer_text, (40, 120))
