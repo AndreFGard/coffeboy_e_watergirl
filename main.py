@@ -274,8 +274,20 @@ class Game(modules.input.Input):
             if "agua quente" in self.inventario_tipos:
                 if "grao_de_cafe" in self.inventario_tipos:
                     if self.inventario_tipos.count("moeda") >= 3:
-                       #vencer o jogo 
+                        #vencer o jogo 
                         dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+                    # removendo os itens do inventario e colocando o cafe preparado
+            def coletou_tudo(self):
+                for item_needed in self.requisitos_vitoria:
+                    if item_needed not in self.inventario:
+                        return False
+                return True
+
+            if coletou_tudo(self) == True:
+                Inventory.apagar_inventario(self)
+                self.inventario = []
+                cafe = Item(self, 'copo_de_cafe', (0,0), ())
+                self.inventory.add_item_to_slot(cafe, 0)
 
              #atualizar os buffs
             for i,buff in enumerate(self.active_buffs):
@@ -289,18 +301,7 @@ class Game(modules.input.Input):
             #print(self.tilemap.physics_rects_around(self.player.pos))
             lose_text = ""
             if dialog_message:   
-                # removendo os itens do inventario e colocando o cafe preparado
-                def coletou_tudo(self):
-                    for item_needed in self.requisitos_vitoria:
-                        if item_needed not in self.inventario:
-                            return False
-                    return True
 
-                if coletou_tudo(self) == True:
-                    Inventory.apagar_inventario(self)
-                    self.inventario = []
-                    cafe = Item(self, 'copo_de_cafe', (0,0), ())
-                    self.inventory.add_item_to_slot(cafe, 0)
                     
                 
                 self.movement = [False, False] 
