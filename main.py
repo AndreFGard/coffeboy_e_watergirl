@@ -431,7 +431,7 @@ class Game(modules.input.Input):
                 if i == self.active_buffs[0]:
                     self.screen.blit(buff_image, (50, 300))
                 else:
-                    self.screen.blit(buff_image, (50, 350))
+                    self.screen.blit(buff_image, (50, 380))
         pygame.display.flip()
 
     
