@@ -47,6 +47,8 @@ class Inventory: # representa o inventário como um todo.
         slot_width = slot_height = 110
         self.slot_image =  pygame.transform.scale(slot_image, (slot_width, slot_height))
 
+        self.font_37 = font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 37)
+
 
     def add_slot(self, slot):
         self.slots.append(slot)
@@ -110,8 +112,7 @@ class Inventory: # representa o inventário como um todo.
                 game.screen.blit(item_image, (item_x, item_y))  # Mostra a imagem do item no slot
                 
                 if slot.quantity > 0:
-                    font_path = './data/font/MadimiOne-Regular.ttf'
-                    font = pygame.font.Font(font_path, 37)
+                    font = self.font_37
                     quantity_text = font.render(str(slot.quantity), True, (48, 39, 32))
                     #quantity_text = font.render(str(slot.quantity), True, (0,0,0))
                     quantity_rect = quantity_text.get_rect(center=(item_x + 30, item_y + 82))
