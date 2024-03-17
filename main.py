@@ -70,7 +70,7 @@ class Game(modules.input.Input):
         item4 = Item(self, 'agua_quente', (150, 150), ())
         buff_velocidade = Buff_velocidade(self, "raio", (140, 50), ())
         buff_pulo = Buff_pulo(self, 'botas', (200, 50), ())
-        self.itens_coletaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
+        self.itens_coletaveis = [*[Item(self, 'moeda', (80 - 25 * i,80), ()) for i in range(3)], item1,item2, item3, item4, buff_velocidade, buff_pulo]
         self.requisitos_vitoria = [item1, item2, item4]
 
         # parâmetros gerais do inventário
@@ -93,7 +93,7 @@ class Game(modules.input.Input):
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
 
-        self.total_time = 30 * 1000
+        self.total_time = 53 * 1000
         
         
     def toggle_fullscreen(self):
@@ -271,7 +271,7 @@ class Game(modules.input.Input):
                     self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
-            if "agua quente" in self.inventario_tipos:
+            if "agua_quente" in self.inventario_tipos:
                 if "grao_de_cafe" in self.inventario_tipos:
                     if self.inventario_tipos.count("moeda") >= 3:
                        #vencer o jogo 
