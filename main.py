@@ -276,7 +276,7 @@ class Game(modules.input.Input):
                 # Posição y é ajustada para cima da cabeça do personagem
                 dialog_y = self.player.rect().top - 40
                 # Renderiza a mensagem de diálogo na tela sem fundo
-                dialog_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 32)  # Defina a fonte e o tamanho da fonte
+                dialog_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 20)  # Defina a fonte e o tamanho da fonte
                 dialog_text = dialog_font.render(dialog_message, True, (255, 255, 255))  # Renderiza o texto
                 dialog_rect = dialog_text.get_rect(topleft=(dialog_x, dialog_y))  # Obtém o retângulo que envolve o texto
 
@@ -297,7 +297,7 @@ class Game(modules.input.Input):
                 pontuacao_x = self.player.rect().right 
                 pontuacao_y = self.player.rect().top - 60
                 # Renderizar pontuacao
-                pontuacao_font = pygame.font.Font(None, 12)
+                pontuacao_font = pygame.font.Font(None, 18)
                 pontuacao_text = pontuacao_font.render(f"Pontuaçao: {pontos}", True, (255, 255, 255))
                 countdown_rect = pontuacao_text.get_rect(topleft=(pontuacao_x, pontuacao_y))
                 
@@ -318,7 +318,7 @@ class Game(modules.input.Input):
                     self.movement = [False, False]
                     lose_x = self.player.rect().right + 20
                     lose_y = self.player.rect().top - 50
-                    lose_font = pygame.font.Font(None, 24)
+                    lose_font = pygame.font.Font(None, 20)
                     lose_text = lose_font.render("Você não conseguirá chegar a tempo para a prova de cálculo", True, (0, 0, 0))
                     lose_rect = lose_text.get_rect(topleft=(lose_x, lose_y))
                     
