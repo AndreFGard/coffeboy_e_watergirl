@@ -194,7 +194,7 @@ class Game(modules.input.Input):
         dialog_message = ""  # Variável para armazenar a mensagem do balão de diálogo
         start_time = pygame.time.get_ticks()  # Obtendo o tempo de início
         # tempo maximo para ganhar o jogo(colocar a qts em segundos antes da multiplicacao)
-        total_time = 10 * 1000
+        total_time = 30 * 1000
         # essas 2 variaveis vao controlar o tempo para o jogo fechar
         contador = 0
         fim = False
@@ -202,8 +202,10 @@ class Game(modules.input.Input):
         pontuacao_ = False
         #é usado quando vai contar a pontuacao, para contar a qtd de moedas no inventario
         moedas = 0
+        
     
         while True:
+
             #self.display.fill((200,200,255))
             self.display.blit(self.assets['background'], (0,0))
 
@@ -228,7 +230,9 @@ class Game(modules.input.Input):
                 self.display.blit(timer_text, (10, 30))  
             
 
-
+            global buff_image
+            buff_image = ""
+                    
             # Renderizar os itens colecionáveis
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.itens_coletaveis:
@@ -241,10 +245,12 @@ class Game(modules.input.Input):
                     item.coletado = True
 
                     #tratar os buffs separadamente, pois estes nao podem ser coletados
+  
                     if item.is_buff:
                         self.active_buffs.append(item)
                         item.apply_to_target(self.player)
-                    else:    
+                        buff_image = self.assets[item.tipo]
+                    else:
                         self.inventario.append(item)
                         self.inventory.add_item_to_slot(item, 0)
                         if item.name == 'agua_quente':
@@ -353,19 +359,28 @@ class Game(modules.input.Input):
             # e escreve na tela as alteracoes que fizemos, a cada iter
             self.screen.blit(pygame.transform.scale(self.display, (self.width, self.height)), (0,0))
             # Atualiza a tela
-                       
+
             #pygame.display.update()
             
             clock.tick(60) 
-            self.draw_invent()  # mostra o inventário na tela
+            self.draw_invent(buff_image)  # mostra o inventário na tela
 
 
-    def draw_invent(self):
+
+    def draw_invent(self, buff_image):
         # Atualizando o inventário
         self.inventory.draw_inventory(self)
+        if self.active_buffs:
+            for i in self.active_buffs:
+                buff_image = self.assets[i.tipo]
+                buff_image = pygame.transform.smoothscale(buff_image, (60,60))
+                if i == self.active_buffs[0]:
+                    self.screen.blit(buff_image, (50, 300))
+                else:
+                    self.screen.blit(buff_image, (50, 350))
         pygame.display.flip()
 
-        
+    
 
 
 

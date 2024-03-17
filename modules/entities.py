@@ -32,8 +32,7 @@ class PhysicsEntity:
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
 
     def rect_with_offset(self, offset:tuple):
-        return pygame.Rect(sum_vectors(subtract_vectors(self.pos, offset),
-                                 self.anim_offset), self.size)
+        return pygame.Rect(sum_vectors(subtract_vectors(self.pos, offset), self.anim_offset), self.size)
 
     def update(self, tilemap:Tilemap, movement=(0,0)):
         """moves the player"""
@@ -164,6 +163,7 @@ class Itemcoletavel(PhysicsEntity):
 class Buff_velocidade(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
+        self.tipo = tipo
         self.is_buff = True
         
         #se o buff esta sendo aplicado agora
@@ -194,6 +194,7 @@ class Buff_velocidade(Itemcoletavel):
 class Buff_pulo(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
+        self.tipo = tipo
         self.is_buff = True
         
         #se o buff esta sendo aplicado agora
