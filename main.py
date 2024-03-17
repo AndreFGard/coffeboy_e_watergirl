@@ -82,6 +82,7 @@ class Game(modules.input.Input):
         self.inventory.add_slot(slot3)
 
         self.inventario = []
+        self.inventario_tipos = []
 
         self.font = pygame.font.Font(None, 34)  # Definindo a fonte para o timer
         
@@ -253,14 +254,21 @@ class Game(modules.input.Input):
                         buff_image = self.assets[item.tipo]
                     else:
                         self.inventario.append(item)
+                        self.inventario_tipos.append(item.name)
                         self.inventory.add_item_to_slot(item, 0)
-                        if item.name == 'agua_quente':
-                            dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+
+                            
                     # Remova o item da lista de itens colecionáveis
                     self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
-            #atualizar os buffs
+            if "agua quente" in self.inventario_tipos:
+                if "grao_de_cafe" in self.inventario_tipos:
+                    if self.inventario_tipos.count("moeda") >= 3:
+                       #vencer o jogo 
+                        dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+
+             #atualizar os buffs
             for i,buff in enumerate(self.active_buffs):
                 #se o buff nao estiver mais ativo, removê-lo
                 if not buff.update(self.tilemap):
