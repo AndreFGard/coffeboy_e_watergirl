@@ -193,9 +193,15 @@ class Game(modules.input.Input):
         clock = pygame.time.Clock()
         dialog_message = ""  # Variável para armazenar a mensagem do balão de diálogo
         start_time = pygame.time.get_ticks()  # Obtendo o tempo de início
-        total_time = 2 * 60 * 1000
-        ganhou = False
-
+        # tempo maximo para ganhar o jogo(colocar a qts em segundos antes da multiplicacao)
+        total_time = 10 * 1000
+        # essas 2 variaveis vao controlar o tempo para o jogo fechar
+        contador = 0
+        fim = False
+        #usada pra pegar a pontuacao somente uma vez
+        pontuacao_ = False
+        #é usado quando vai contar a pontuacao, para contar a qtd de moedas no inventario
+        moedas = 0
     
         while True:
             #self.display.fill((200,200,255))
@@ -215,12 +221,12 @@ class Game(modules.input.Input):
             self.player.render(self.display, offset=self.scroll) 
 
             #renderizar o timer
-            elapsed_time = pygame.time.get_ticks() - start_time
-            # timer_text = self.font.render(f"Tempo: {elapsed_time // 1000} s", True, (255, 255, 255))
-            remaining_time = max((total_time - elapsed_time) // 1000, 0)
-            timer_text = self.font.render(f"Tempo restante: {remaining_time} s", True, (0, 0, 100))
-            self.display.blit(timer_text, (10, 30))  
-            # self.display.blit(timer_text, (10, 30))
+            if pontuacao_ == False:
+                elapsed_time = pygame.time.get_ticks() - start_time
+                remaining_time = max((total_time - elapsed_time) // 1000, 0)
+                timer_text = self.font.render(f"Tempo restante: {remaining_time} s", True, (0, 0, 100))
+                self.display.blit(timer_text, (10, 30))  
+            
 
 
             # Renderizar os itens colecionáveis
@@ -242,8 +248,7 @@ class Game(modules.input.Input):
                         self.inventario.append(item)
                         self.inventory.add_item_to_slot(item, 0)
                         if item.name == 'agua_quente':
-                            dialog_message = "Você pegou a água quente!"
-                            ganhou = True
+                            dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
                     # Remova o item da lista de itens colecionáveis
                     self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
@@ -255,41 +260,71 @@ class Game(modules.input.Input):
                     self.active_buffs.pop(i)
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
-
-            if dialog_message:
-                # ESSE TEXTO TA BUGANDO QUANDO O PERSONAGEM SE MOVE, MAS COMO É ALGO PARA PEGAR AO FINALIZAR O JOGO NAO TEM PROBLEMA, PQ O OBJETIVO É O BONECO NAO SE MOVER MAIS
+            if dialog_message:   
+                self.movement = [False, False] 
                 # Posição x é ajustada para a direita da cabeça do personagem
                 dialog_x = self.player.rect().right + 30
                 # Posição y é ajustada para cima da cabeça do personagem
                 dialog_y = self.player.rect().top - 40
                 # Renderiza a mensagem de diálogo na tela sem fundo
-                dialog_font = pygame.font.Font(None, 12)  # Defina a fonte e o tamanho da fonte
+                dialog_font = pygame.font.Font(None, 8)  # Defina a fonte e o tamanho da fonte
                 dialog_text = dialog_font.render(dialog_message, True, (255, 255, 255))  # Renderiza o texto
                 dialog_rect = dialog_text.get_rect(topleft=(dialog_x, dialog_y))  # Obtém o retângulo que envolve o texto
                 self.display.blit(dialog_text, dialog_rect.topleft)  # Renderiza o texto na tela
                 # isso era pra renderizar o texto de vitoria
+                victory_x = self.player.rect().right - 20
+                victory_y = self.player.rect().top - 80
                 victory_font = pygame.font.Font(None, 18)
-                victory_text = victory_font.render("Vitória!", True, (0, 0, 0))
-                victory_rect = victory_text.get_rect(center=(self.width // 2, self.height // 3))
-                self.display.blit(victory_text, victory_rect)
-                # Determinar posição para a contagem regressiva
-                countdown_position = (self.width // 2, self.height // 2 + 50)
-                # AQUI ERA PRA PRINTAR A CONTAGEM REGRESSIVA DEPOUIS QUE ELA PARRASE, MAS N TA FUNCIONANDO NEM ASSIM
-                # Renderizar contagem regressiva
-                countdown_font = pygame.font.Font(None, 18)
-                countdown_text = countdown_font.render(f"Contagem regressiva: {remaining_time} s", True, (255, 255, 255))
-                countdown_rect = countdown_text.get_rect(center=countdown_position)
-                self.display.blit(countdown_text, countdown_rect)
-            # AQUI QUANDO RESOLER OS DE CIMA DA PRA FAZER ALGO PARECIDO COM UMA MENSAGEM DE DERROTA, E ACABAR O JOGO
-            if pygame.time.get_ticks() - start_time >= total_time:
-                print("Tempo acabou!")  
+                victory_text = victory_font.render("Corra para Área II", True, (0, 0, 0))
+                victory_rect = victory_text.get_rect(topleft=(victory_x, victory_y))
+                self.display.blit(victory_text, victory_rect.topleft)
+                contador += 1
+                if pontuacao_ == False:
+                    #usar moedas para dar mais pontuacao aqui
+                    moedas = sum(1 for item in self.inventario if item.name == 'moeda')
+                    pontos = remaining_time * 2 + moedas * 50
+                    pontuacao_ = True
+                # Determinar posição para pontuacao
+                pontuacao_x = self.player.rect().right 
+                pontuacao_y = self.player.rect().top - 60
+                # Renderizar pontuacao
+                pontuacao_font = pygame.font.Font(None, 12)
+                pontuacao_text = pontuacao_font.render(f"Pontuaçao: {pontos}", True, (255, 255, 255))
+                countdown_rect = pontuacao_text.get_rect(topleft=(pontuacao_x, pontuacao_y))
+                self.display.blit(pontuacao_text, countdown_rect.topleft)
+                fim = True
+                         
+                # contador_x = self.player.rect().right - 30
+                # contador_y = self.player.rect().top - 80
+                # contador_font = pygame.font.Font(None, 18)
+                # contador_text = contador_font.render(f"contador: {contador}", True, (0, 0, 0))
+                # contador_rect = contador_text.get_rect(topleft=(contador_x, contador_y))
+                # self.display.blit(contador_text, contador_rect.topleft)
+                if contador >= 300:
+                    pygame.quit()
+                    sys.exit()
+            # coloquei esse else pq essa mensagem de derrota apareca bem no final antes de fechar o programa quando ganhava
+            else:
+                if pygame.time.get_ticks() - start_time >= total_time:
+                    self.movement = [False, False]
+                    lose_x = self.player.rect().right + 20
+                    lose_y = self.player.rect().top - 50
+                    lose_font = pygame.font.Font(None, 10)
+                    lose_text = lose_font.render("Você não conseguirá chegar a tempo para a prova de cálculo", True, (0, 0, 0))
+                    lose_rect = lose_text.get_rect(topleft=(lose_x, lose_y))
+                    self.display.blit(lose_text, lose_rect.topleft)
+                    contador +=1
+                    fim = True
+                    if contador >= 200:
+                        pygame.quit()
+                        sys.exit()
     
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 # Movimentação do personagem
-                elif event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN and fim == False:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
                     elif event.key == pygame.K_RIGHT:
@@ -321,7 +356,7 @@ class Game(modules.input.Input):
                        
             #pygame.display.update()
             
-            clock.tick(60)
+            clock.tick(60) 
             self.draw_invent()  # mostra o inventário na tela
 
 
