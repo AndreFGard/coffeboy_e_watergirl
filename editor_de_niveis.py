@@ -41,7 +41,7 @@ class Game(modules.input.Input):
             }
         #print(self.assets)
         self.player = Player(self, (0, 0), (8, 15))
-        self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16, newmapname="newmap.json")
+        self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16, newmapname="data/maps/0.json")
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
         #esse é o offset da camera
         self.scroll = [0,0]
