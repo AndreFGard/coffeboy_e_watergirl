@@ -380,11 +380,11 @@ class Game(modules.input.Input):
             self.screen.blit(timer_text, (40, 120))
 
 
-            self.draw_invent(self, buff_image)  # mostra o inventário na tela
+            self.draw_invent(buff_image)  # mostra o inventário na tela
 
 
 
-    def draw_invent(self):
+    def draw_invent(self, buff_image):
         # Atualizando o inventário
         self.inventory.draw_inventory(self)
         if self.active_buffs:
