@@ -73,6 +73,15 @@ class Game(modules.input.Input):
         self.itens_coletaveis = [*[Item(self, 'moeda', (80 - 25 * i,80), ()) for i in range(3)], item1,item2, item3, item4, buff_velocidade, buff_pulo]
         self.requisitos_vitoria = [item1, item2, item4]
 
+        # música de fundo
+        self.musica_de_fundo = pygame.mixer.music.load('data/sfx/BackgroundMusic.mp3')
+        pygame.mixer.music.play(-1)
+
+        # efeitos sonoros
+        self.coffee_sound = pygame.mixer.Sound('data/sfx/coffee_sound.wav')
+        self.moeda_sound = pygame.mixer.Sound('data/sfx/moeda_sound.wav')
+        self.coleta_sound = pygame.mixer.Sound('data/sfx/coleta_sound.wav')
+
         # parâmetros gerais do inventário
         slot1 = InventorySlot(100, 800)
         slot2 = InventorySlot(200, 800)
@@ -261,10 +270,18 @@ class Game(modules.input.Input):
                         self.active_buffs.append(item)
                         item.apply_to_target(self.player)
                         buff_image = self.assets[item.tipo]
+                        self.coleta_sound.play()
                     else:
                         self.inventario.append(item)
                         self.inventario_tipos.append(item.name)
                         self.inventory.add_item_to_slot(item, 0)
+                        #tocar o som de coleta
+                        if item.name == 'moeda':
+                            self.moeda_sound.play()
+                        elif item.name == 'grao_de_cafe':
+                            self.coffee_sound.play()
+                        else:
+                            self.coleta_sound.play()
 
                             
                     # Remova o item da lista de itens colecionáveis
