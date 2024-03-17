@@ -38,8 +38,6 @@ class InventorySlot: # representa um slot individual no inventário.
         return self.item
 
     def remove_item(self):
-        self.x = 0
-        self.y = 0
         self.item = None
         self.quantity = 0
 
