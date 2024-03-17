@@ -37,6 +37,11 @@ class InventorySlot: # representa um slot individual no inventário.
     def get_item(self):
         return self.item
 
+    def remove_item(self):
+        self.x = 0
+        self.y = 0
+        self.item = None
+        self.quantity = 0
 
 class Inventory: # representa o inventário como um todo.
     def __init__(self, capacity):
@@ -70,7 +75,13 @@ class Inventory: # representa o inventário como um todo.
                 
         else:
             print("Slot inválido/sem slots restando")
+            
+            
+    def apagar_inventario(self):
+        for item in self.inventory.slots:
+            InventorySlot.remove_item(item)
 
+                
     
     # def resize_slots_to(self, slot_width=110, slot_height=110):
     #     self.slots = list(map(pygame.trans))

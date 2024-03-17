@@ -71,6 +71,7 @@ class Game(modules.input.Input):
         buff_velocidade = Buff_velocidade(self, "raio", (140, 50), ())
         buff_pulo = Buff_pulo(self, 'botas', (200, 50), ())
         self.itens_coletaveis = [item1,item2, item3, item4, buff_velocidade, buff_pulo]
+        self.requisitos_vitoria = [item1, item2, item4]
 
         # parâmetros gerais do inventário
         slot1 = InventorySlot(100, 800)
@@ -256,6 +257,7 @@ class Game(modules.input.Input):
                         self.inventory.add_item_to_slot(item, 0)
                         if item.name == 'agua_quente':
                             dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+                            
                     # Remova o item da lista de itens colecionáveis
                     self.itens_coletaveis.remove(item)
                     break  # Sair do loop assim que um item for coletado
@@ -265,11 +267,27 @@ class Game(modules.input.Input):
                 #se o buff nao estiver mais ativo, removê-lo
                 if not buff.update(self.tilemap):
                     self.active_buffs.pop(i)
+            
+
 
 
             #print(self.tilemap.physics_rects_around(self.player.pos))
             lose_text = ""
             if dialog_message:   
+                # removendo os itens do inventario e colocando o cafe preparado
+                def coletou_tudo(self):
+                    for item_needed in self.requisitos_vitoria:
+                        if item_needed not in self.inventario:
+                            return False
+                    return True
+
+                if coletou_tudo(self) == True:
+                    Inventory.apagar_inventario(self)
+                    self.inventario = []
+                    cafe = Item(self, 'copo_de_cafe', (0,0), ())
+                    self.inventory.add_item_to_slot(cafe, 0)
+                    
+                
                 self.movement = [False, False] 
                 # Posição x é ajustada para a direita da cabeça do personagem
                 dialog_x = self.player.rect().right + 30
@@ -287,6 +305,9 @@ class Game(modules.input.Input):
                 victory_text = victory_font.render("Corra para Área II", True, (0, 0, 0))
                 victory_rect = victory_text.get_rect(topleft=k_vector(self.render_scale, (victory_x, victory_y)))
                 
+                
+                
+                    
                 contador += 1
                 if pontuacao_ == False:
                     #usar moedas para dar mais pontuacao aqui
