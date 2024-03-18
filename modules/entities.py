@@ -161,7 +161,7 @@ class Itemcoletavel(PhysicsEntity):
     #     # Você pode personalizar a renderização do item colecionável conforme necessário
 
 
-class Buff_velocidade(Itemcoletavel):
+class Speed_buff(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.tipo = tipo
@@ -192,7 +192,7 @@ class Buff_velocidade(Itemcoletavel):
                 return False
         return True
     
-class Buff_pulo(Itemcoletavel):
+class Jump_buff(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.tipo = tipo
@@ -224,7 +224,7 @@ class Buff_pulo(Itemcoletavel):
         return True
 
 
-class cha_mortal(Itemcoletavel):
+class Tea(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True

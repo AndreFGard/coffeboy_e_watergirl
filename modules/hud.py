@@ -1,6 +1,7 @@
 import pygame
 import pyguix.ui.elements as ui
 import sys
+
 from modules.utils import load_image
 from modules.entities import Itemcoletavel
 
@@ -9,6 +10,7 @@ width, height = 1280, 960
 screen = pygame.display.set_mode((width, height))
 
 ITEM_TAMANHO = 60
+
 
 class Item(Itemcoletavel): # representa os itens que podem ser armazenados no inventário
     def __init__(self, game, name, posicao, tamanho,):

@@ -1,5 +1,9 @@
-BASE_IMG_PATH =  "data/images/"
+
 import pygame
+import os
+
+BASE_IMG_PATH =  "data/images/"
+
 
 def sum_vectors(v1:tuple, v2:tuple) -> tuple:
     """Sums the corresponding indexes of the vectors"""
@@ -21,12 +25,15 @@ def load_image(path):
     img.set_colorkey((0,0,0))
     return img
 
-import os
 def load_images(path):
     images = []
     for img_name in sorted(os.listdir(BASE_IMG_PATH + path)):
         images.append(load_image(path + "/" + img_name))
     return images
+
+def distance(A, B): 
+    return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
+
 
 class Animation:
     def __init__(self, images: list[pygame.Surface], img_dur=5, loop=True):

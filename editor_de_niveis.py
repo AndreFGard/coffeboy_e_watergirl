@@ -1,14 +1,13 @@
 import pygame
 import sys
-import modules.input
-from modules.entities import PhysicsEntity, Player
-from modules.utils import load_image, load_images, Animation, subtract_vectors, k_vector,sum_vectors
-from modules.tilemap import Tilemap
-def distance(A, B): return (sum(((B[i] - A[i])**2 for i in range(2))))**0.5
 
-class Game(modules.input.Input):
+from modules.entities import PhysicsEntity, Player
+from modules.utils import load_image, load_images, Animation, subtract_vectors, k_vector,sum_vectors, distance
+from modules.tilemap import Tilemap
+
+
+class Game():
     def __init__(self):
-        modules.input.Input.__init__(self)
         self.width = 1280
         self.height = 960
 
