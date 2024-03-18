@@ -222,3 +222,32 @@ class Buff_pulo(Itemcoletavel):
                 self.__remove_buff(self.target)
                 return False
         return True
+
+
+class cha_mortal(Itemcoletavel):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho)
+        self.is_buff = True
+        self.game = game
+        #se o buff esta sendo aplicado agora
+        self.applying = False
+        #tempo em frames durante o qual o target sera afetado pelo buff (eu não sei porque não ficou teletransportando várias vezes?)
+        self.validity = 10 * 60
+
+    def apply_to_target(self, target:PhysicsEntity):
+        """Apenas um exemplo do que um buff faria a um jogador"""
+        self.game.player.pos = [50, 50]
+
+    def __remove_buff(self, target:PhysicsEntity):
+        """Apenas um exemplo da reversão de um buff"""
+        target.velocidade_pulo = -3
+
+    def update(self, tilemap: Tilemap, movement=(0,0)):
+        """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""
+        super().update(tilemap, movement)
+        if self.applying:
+            self.validity -= 1
+            if self.validity < 0:
+                self.__remove_buff(self.target)
+                return False
+        return True
