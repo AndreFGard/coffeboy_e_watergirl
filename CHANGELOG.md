@@ -1,9 +1,42 @@
 
+## \<afs15\> [0.0.25] - - 2024-03-18 &ensp;
+- breaking changes no mapa
+- adicao de decoracoes no mapa
+- fazer cha reviver o personagem e resetar o estado do jogo
+
+## \<pncg\> [0.0.24] - 2024-03-17 &ensp;
+- adicionar buff do chá letal
+
+## \<frqal\> [0.0.23] - 2024-03-17 &ensp;
+- adicionar efeitos sonoros e músicas
+
+## \<bpas\> [0.0.22] - 2024-03-17 &ensp;
+- fazer um copo de cafe aparecer e substituir os outros itens quando o player ganha
+- corrigir bug no inventario
+- ajustar o posicionamento dos buffs na hud
+
+## \<afs15\> [0.0.21] - 2024-03-17 &ensp;
+- fazer as fontes serem renderizadas em alta resolucao
+
+## \<rgar\> [0.0.21] - 2024-03-17 &ensp;
+- adicionar um jeito de vencer
+
+## \<bpas\> [0.0.21] - 2024-03-16 &ensp;
+- buff que faz o personagem pular mais alto por alguns segundos
+- fazer uso dos novos sprites dos buffs
+
+## \<afs15> [0.0.20] - 2024-03-16 &ensp;
+- melhorias no editor de niveis
+
+## \<frqal\> [0.0.20] - 2024-03-16 &ensp;
+- customizacao e criacao de assets de autoria
+- adicao de sprites pro cha e outros buffs
+
 ## \<afs15\> [0.0.19] - 2024-03-15 &ensp;
 - melhora de no mínimo 17% no desempenho atraves da remocao de uma transformacao de tamanho dos itens do inventario que se repetia a cada frame
 - permitir que o player seja de maior resolução através da adicao do parametro coordinate_system_scale ao metodo render das entidades físicas
 
-## \<frqal\> e \<afs15\> [0.0.18] - 2024-03-15 &ensp;
+## \<frqal\> e \<bpas\> e \<afs15\>[0.0.18] - 2024-03-15 &ensp;
 - conserto definitivo do problema da colisao dos sprites, alcançado através da associação automática do tamanho do sprite ao tamanho da hitbox e da renovação dos sprites das moedas
 - mudança da nomenclatura das variáveis dos itens coletaveis para que ela seja mais semanticamente adequada 
 
