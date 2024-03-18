@@ -1,7 +1,7 @@
 import pygame
 import sys
 import modules.input
-from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff_velocidade, Buff_pulo, k_vector
+from modules.entities import PhysicsEntity, Player, Itemcoletavel, Buff_velocidade, Buff_pulo, k_vector, cha_mortal
 
 from modules.utils import load_image, load_images, Animation, subtract_vectors
 from modules.tilemap import Tilemap
@@ -70,7 +70,8 @@ class Game(modules.input.Input):
         item4 = Item(self, 'agua_quente', (150, 150), ())
         buff_velocidade = Buff_velocidade(self, "raio", (140, 50), ())
         buff_pulo = Buff_pulo(self, 'botas', (200, 50), ())
-        self.itens_coletaveis = [*[Item(self, 'moeda', (80 - 25 * i,80), ()) for i in range(3)], item1,item2, item3, item4, buff_velocidade, buff_pulo]
+        lose_game = cha_mortal(self, 'moeda', (200, 200), ())
+        self.itens_coletaveis = [*[Item(self, 'moeda', (80 - 25 * i,80), ()) for i in range(3)], item1, item2, item3, item4, lose_game, buff_velocidade, buff_pulo]
         self.requisitos_vitoria = [item1, item2, item4]
 
         # música de fundo
