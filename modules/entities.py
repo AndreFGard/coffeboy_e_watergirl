@@ -229,18 +229,19 @@ class cha_mortal(Itemcoletavel):
         super().__init__(game, tipo, posicao, tamanho)
         self.is_buff = True
         self.game = game
+        self.tipo = tipo
         #se o buff esta sendo aplicado agora
         self.applying = False
         #tempo em frames durante o qual o target sera afetado pelo buff (eu não sei porque não ficou teletransportando várias vezes?)
-        self.validity = 10 * 60
+        self.validity = 0
 
     def apply_to_target(self, target:PhysicsEntity):
         """Apenas um exemplo do que um buff faria a um jogador"""
-        self.game.player.pos = [50, 50]
+        self.game.reviver()
 
     def __remove_buff(self, target:PhysicsEntity):
         """Apenas um exemplo da reversão de um buff"""
-        target.velocidade_pulo = -3
+        return
 
     def update(self, tilemap: Tilemap, movement=(0,0)):
         """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""

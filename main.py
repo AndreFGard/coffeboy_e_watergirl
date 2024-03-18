@@ -115,7 +115,11 @@ class Game(modules.input.Input):
         else:
             self.screen = pygame.display.set_mode((self.width, self.height))
         
-    
+
+    def reviver(self):
+        self.player.pos = [50,50]
+        # se vc joga mal, eu espero que você tenha bastante memória 
+        Game().run()
 
     def main_menu(self):
         # Define as cores utilizadas no menu
