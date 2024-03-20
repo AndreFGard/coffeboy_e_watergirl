@@ -3,7 +3,7 @@ import pygame
 import sys
 
 from modules.entities import PhysicsEntity, Player, Itemcoletavel, Speed_buff, Jump_buff, k_vector, Tea
-from modules.utils import load_image, load_images, distance, subtract_vectors, Animation, load_assets
+from modules.utils import load_image, load_images, distance, subtract_vectors, Animation, load_assets, get_pos_from_tilemap_pos
 from modules.tilemap import Tilemap
 from modules.hud import Item, InventorySlot, Inventory, pause_menu
 
@@ -44,10 +44,10 @@ class Game():
         agua  = Item(self, 'agua_quente', (1285, 17), ())
         speed_buff = Speed_buff(self, "raio", (140, 50), ())
         jump_buffs = (Jump_buff(self, 'botas', (1100, 16), ()), Jump_buff(self, 'botas', (765, 0), ()), Jump_buff(self, 'botas', (484, 274), ()))
-        lose_game = Tea(self, 'tea', (200, 200), ())
+        chas_mortais = [Tea(self, 'tea', (get_pos_from_tilemap_pos(pos)), ()) for pos in self.tilemap.chas_posicoes]
 
         posicoes_moedas = ((913,40), (1255,-61), (180, 192), (437, 274), (476, 274))
-        self.collectible_items = [*[Item(self, 'moeda', pos, ()) for pos in posicoes_moedas], moeda, agua, lose_game, speed_buff, *cafes, *jump_buffs]
+        self.collectible_items = [*[Item(self, 'moeda', pos, ()) for pos in posicoes_moedas], moeda, agua, *chas_mortais, speed_buff, *cafes, *jump_buffs]
         self.victory_req = [moeda, cafes[1], agua]
 
         # música de fundo

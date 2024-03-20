@@ -22,6 +22,7 @@ class Tilemap:
 
         self.newmapname = newmapname
 
+        self.chas_posicoes = []
 
         # preenchendo o mapa
         if map_filename:
@@ -36,7 +37,12 @@ class Tilemap:
             #guardando os tiles do arquivo no nosso tilemap
             #observe que cada tile esta armazenado num dicionario cuja chave é a coordenada e os valore sao {'type': 'stone', 'variant': 1, 'pos': (10, 5 + i)}  
             for coordenada in tilemap_arquivo:
-                self.tilemap[coordenada] = tilemap_arquivo[coordenada]      
+                tile = tilemap_arquivo[coordenada] 
+                self.tilemap[coordenada] = tile    
+                if tile['type'] == "tea":
+                    self.chas_posicoes.append(tile['pos'])
+
+
         else:
             #preenchendo da maneira padrao
             for i in range(10):
