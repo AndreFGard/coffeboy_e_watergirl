@@ -1,6 +1,9 @@
+
 import pygame
+
 from modules.utils import sum_vectors, subtract_vectors, k_vector
 from modules.tilemap import Tilemap
+
 class PhysicsEntity:
     def __init__(self, game, e_type, pos, size=()):
         self.game = game
@@ -10,13 +13,13 @@ class PhysicsEntity:
 
         self.action = ''
         self.apply_gravity = True
-        #esse offset tira o padding que as imagens das animacoes tem como margem
+        # esse offset tira o padding que as imagens das animacoes tem como margem
         # pra representar seus movimentos
         self.anim_offset = (0, 0)
         self.movement_multiplier = 1
         self.velocidade_pulo = -3
         
-        #pra caso ele esteja virado pro outro lado
+        # pra caso ele esteja virado pro outro lado
         self.flip = False
         self.set_action('idle')
         self.size = size or self.animation.get_size()
@@ -24,14 +27,14 @@ class PhysicsEntity:
     def set_action(self, action):
         if action != self.action:
             self.action = action
-            #criamos uma nova instanccia da animacao a cada vez que precisarmos dela
-            #é aqui onde o caminho praas animacoes é definido.
+            # criamos uma nova instanccia da animacao a cada vez que precisarmos dela
+            # é aqui onde o caminho para as animacoes é definido.
             self.animation = self.game.assets[self.type + "/" + self.action].copy()
 
-    def rect(self):
+    def get_rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
 
-    def rect_with_offset(self, offset:tuple):
+    def get_rect_with_offset(self, offset:tuple):
         return pygame.Rect(sum_vectors(subtract_vectors(self.pos, offset), self.anim_offset), self.size)
 
     def update(self, tilemap:Tilemap, movement=(0,0)):
@@ -39,17 +42,15 @@ class PhysicsEntity:
         self.collisions = {'up': False, 'down': False, 'left': False, 'right': False}
         frame_movement = sum_vectors(movement,self.velocity)
 
-
-        #-------------------------------------------------------#
         # colisao
         self.pos[0] += int(frame_movement[0] * self.movement_multiplier)
-        entity_rect = self.rect()
+        entity_rect = self.get_rect()
         for rect in tilemap.physics_rects_around(self.pos):
             if entity_rect.colliderect(rect):
                 if frame_movement[0] > 0:
-                    #a entidade se mexe pra direita
-                    #entao vamos fazer com que a borda direita dela seja empurrada
-                    #pra borda esquerda do rect com que colidiu
+                    # a entidade se mexe pra direita
+                    # entao vamos fazer com que a borda direita dela seja empurrada
+                    # pra borda esquerda do rect com que colidiu
                     entity_rect.right = rect.left
                     self.collisions['right'] = True
                 if frame_movement[0] < 0:
@@ -59,7 +60,7 @@ class PhysicsEntity:
                 self.pos[0] = entity_rect.x
 
         self.pos[1] += frame_movement[1]
-        entity_rect = self.rect()
+        entity_rect = self.get_rect()
         for rect in tilemap.physics_rects_around(self.pos):
             if entity_rect.colliderect(rect):
 
@@ -91,8 +92,8 @@ class PhysicsEntity:
 
     def render(self, surface: pygame.Surface, offset, coordinate_system_scale=1):
         """renders the entity in the passed surface"""
-        #o coordinate_system_scale permite que se renderize a entidade
-        #num espaço de coordenadas onde tudo é maior do que o espaço onde existe a entidade
+        # o coordinate_system_scale permite que se renderize a entidade
+        # num espaço de coordenadas onde tudo é maior do que o espaço onde existe a entidade
         surface.blit(pygame.transform.flip(self.animation.img(), self.flip, False),
                      k_vector(coordinate_system_scale,
                         sum_vectors(subtract_vectors(self.pos, offset),
@@ -146,7 +147,7 @@ class Itemcoletavel(PhysicsEntity):
         self.is_buff = False
         self.apply_gravity = False
 
-        #pegar o tamanho da imagem, se ele nao for fornecido
+        # pegar o tamanho da imagem, se ele nao for fornecido
 
 
     def update(self, tilemap: Tilemap, movement=(0, 0)):
@@ -155,15 +156,9 @@ class Itemcoletavel(PhysicsEntity):
 
         # Lógica adicional de atualização específica para itens colecionáveis pode ser adicionada aqui
 
-    # def render(self, superficie: pygame.Surface, deslocamento):
-    #     """Renderiza o item colecionável"""
-    #     pygame.draw.rect(superficie, (0, 0, 0), pygame.Rect(self.pos[0] - deslocamento[0], self.pos[1] - deslocamento[1], self.size[0], self.size[1]))
-    #     # Você pode personalizar a renderização do item colecionável conforme necessário
-
-
-class Speed_buff(Itemcoletavel):
+class Buff(Itemcoletavel):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
-        super().__init__(game, tipo, posicao, tamanho)
+        super().__init__(game, tipo, posicao, tamanho, pontuacao)
         self.tipo = tipo
         self.is_buff = True
         
@@ -172,6 +167,12 @@ class Speed_buff(Itemcoletavel):
         #tempo em frames durante o qual o target sera afetado pelo buff
         self.validity = 7 * 60
 
+class Speed_buff(Buff):
+    def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
+        super().__init__(game, tipo, posicao, tamanho, pontuacao)
+        self.tipo = tipo
+        self.is_buff = True
+    
     def apply_to_target(self, target:PhysicsEntity):
         """Apenas um exemplo do que um buff faria a um jogador"""
         self.target = target
@@ -192,9 +193,9 @@ class Speed_buff(Itemcoletavel):
                 return False
         return True
     
-class Jump_buff(Itemcoletavel):
+class Jump_buff(Buff):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
-        super().__init__(game, tipo, posicao, tamanho)
+        super().__init__(game, tipo, posicao, tamanho, pontuacao)
         self.tipo = tipo
         self.is_buff = True
         
@@ -238,10 +239,6 @@ class Tea(Itemcoletavel):
     def apply_to_target(self, target:PhysicsEntity):
         """Apenas um exemplo do que um buff faria a um jogador"""
         self.game.reviver()
-
-    def __remove_buff(self, target:PhysicsEntity):
-        """Apenas um exemplo da reversão de um buff"""
-        return
 
     def update(self, tilemap: Tilemap, movement=(0,0)):
         """atualiza a animacao e verifica se o buff ainda deve ser aplicado"""

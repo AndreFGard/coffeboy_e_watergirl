@@ -1,6 +1,4 @@
 import pygame
-import pyguix.ui.elements as ui
-import sys
 
 from modules.utils import load_image
 from modules.entities import Itemcoletavel
@@ -77,16 +75,11 @@ class Inventory: # representa o inventário como um todo.
             print("Slot inválido/sem slots restando")
             
             
-    def apagar_inventario(self):
+    def delete_inventory(self):
         for item in self.inventory.slots:
             InventorySlot.remove_item(item)
 
-                
-    
-    # def resize_slots_to(self, slot_width=110, slot_height=110):
-    #     self.slots = list(map(pygame.trans))
-            
-        
+
     # Função para desenhar o inventário na tela
     def draw_inventory(self, game):
         # Carrega a imagem do slot
@@ -130,32 +123,3 @@ class Inventory: # representa o inventário como um todo.
                     game.screen.blit(quantity_text, quantity_rect.topleft)
 
                 
-
-
-def pause_menu(self):
-    # Upon pressing KEYDOWN event.type for key 'ESC' create an instance
-    # of the pyguix.ui.elements.MessageBox class. (pygame.sprite.Sprite)
-    msgbox = ui.MessageBox(
-        window=self.screen, # pygame active display window
-        message_text="Deseja Sair?", # message text to appear.
-        title="Jogo pausado", # title of message box
-        buttons=("Sim","Não"), # number of buttons and string values
-        width=340, # width 
-        height=180 # height
-    )
-
-    # NOTE: Call to active MessageBox instance .wait(event_list) function. 
-    # Will return True until a button is clicked. Then it will return False.
-    # True = (yes).wait(), False (no don't).wait()
-    event_list = pygame.event.get()
-    while msgbox.wait(event_list):
-        # NOTE: Update event_list sent in:
-        event_list = pygame.event.get()
-
-    # This will return the button that was clicked from the active MessageBox
-    # instance. 
-    if msgbox.clicked() == "Sim":
-        pygame.quit()
-        sys.exit()
-    else:
-        return

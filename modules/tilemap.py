@@ -1,9 +1,11 @@
 import pygame
+
+from modules.utils import sum_vectors, k_vector
+import json
+
 NEIGHBOR_OFFSET = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(0,0),(-1,1),(0,1),(1,1),]
 COLLIDABLE_TILE_TYPES = {"grass", "stone", "walls"}
 GAMEOVER_BLOCK_TYPES = {"tea"}
-from modules.utils import sum_vectors, k_vector
-import json
 
 
 def pos_in_pixels(posicao_tilemap, tile_size=16):
@@ -102,5 +104,3 @@ class Tilemap:
                             sum_vectors(k_vector(-1, offset), 
                             pos_in_pixels(tile['pos'])
                             ))
-
-

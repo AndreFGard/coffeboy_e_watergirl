@@ -3,9 +3,11 @@ import pygame
 import sys
 
 from modules.entities import PhysicsEntity, Player, Itemcoletavel, Speed_buff, Jump_buff, k_vector, Tea
-from modules.utils import load_image, load_images, distance, subtract_vectors, Animation, load_assets, get_pos_from_tilemap_pos
+from modules.utils import load_image, load_images, distance, subtract_vectors, load_assets, get_pos_from_tilemap_pos
+from modules.animation import Animation
 from modules.tilemap import Tilemap
-from modules.hud import Item, InventorySlot, Inventory, pause_menu
+from modules.hud import Item, InventorySlot, Inventory
+from modules.pause_menu import pause_menu
 
 WHITE = (255, 255, 255)
 GREY = (170, 170, 170)
@@ -218,15 +220,15 @@ class Game():
             self.display.blit(self.assets['background'], (0,0))
 
             #dividir por 2 pra que fique no meio
-            self.scroll[0] += (self.player.rect().centerx - 320//2 - self.scroll[0])//10
-            self.scroll[1] += (self.player.rect().centery - 240//2 - self.scroll[1])//10
+            self.scroll[0] += (self.player.get_rect().centerx - 320//2 - self.scroll[0])//10
+            self.scroll[1] += (self.player.get_rect().centery - 240//2 - self.scroll[1])//10
 
             #renderizar o mapa
             self.tilemap.render(self.display, offset=self.scroll)
 
             #atualizar a posicao do player e renderizá-lo
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            pygame.draw.rect(self.display, (255,100,0), self.player.rect_with_offset(self.scroll))
+            pygame.draw.rect(self.display, (255,100,0), self.player.get_rect_with_offset(self.scroll))
 
             self.player.render(self.display, offset=self.scroll) 
 
@@ -245,11 +247,11 @@ class Game():
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.collectible_items:
                 # desenhar area de colisao
-                pygame.draw.rect(self.display, (255, 100, 0), item.rect_with_offset(self.scroll))
+                pygame.draw.rect(self.display, (255, 100, 0), item.get_rect_with_offset(self.scroll))
                 item.update(self.tilemap)
                 item.render(self.display, self.scroll)
 
-                if not item.coletado and self.player.rect().colliderect(item.rect()):
+                if not item.coletado and self.player.get_rect().colliderect(item.get_rect()):
                     item.coletado = True
 
                     # tratar os buffs separadamente, pois estes nao podem ser coletados
@@ -280,13 +282,13 @@ class Game():
             if "agua_quente" in self.inventory_types:
                 if self.inventory_types.count("grao_de_cafe") >= 2 and self.inventory_types.count("moeda") >= 3:
                     dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
-                    Inventory.apagar_inventario(self)
+                    Inventory.delete_inventory(self)
                     self.inventory_list = []
                     cafe = Item(self, 'copo_de_cafe', (0,0), ())
                     self.inventory.add_item_to_slot(cafe, 0)
 
             if coletou_tudo(self) == True and False:
-                Inventory.apagar_inventario(self)
+                Inventory.delete_inventory(self)
                 self.inventory_list = []
                 cafe = Item(self, 'copo_de_cafe', (0,0), ())
                 self.inventory.add_item_to_slot(cafe, 0)
@@ -303,17 +305,17 @@ class Game():
             if dialog_message: 
                 self.movement = [False, False] 
                 # Posição x é ajustada para a direita da cabeça do personagem
-                dialog_x = self.player.rect_with_offset(self.scroll).right + 30
+                dialog_x = self.player.get_rect_with_offset(self.scroll).right + 30
                 # Posição y é ajustada para cima da cabeça do personagem
-                dialog_y = self.player.rect_with_offset(self.scroll).top - 40
+                dialog_y = self.player.get_rect_with_offset(self.scroll).top - 40
                 # Renderiza a mensagem de diálogo na tela sem fundo
                 dialog_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 20)  # Defina a fonte e o tamanho da fonte
                 dialog_text = dialog_font.render(dialog_message, True, (255, 255, 255))  # Renderiza o texto
                 dialog_rect = dialog_text.get_rect(topleft=(dialog_x, dialog_y))  # Obtém o retângulo que envolve o texto
 
                 # isso era pra renderizar o texto de vitoria
-                victory_x = self.player.rect_with_offset(self.scroll).right - 20
-                victory_y = self.player.rect_with_offset(self.scroll).top - 80
+                victory_x = self.player.get_rect_with_offset(self.scroll).right - 20
+                victory_y = self.player.get_rect_with_offset(self.scroll).top - 80
                 victory_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 72)
                 victory_text = victory_font.render("Corra para Área II", True, (0, 0, 0))
                 victory_rect = victory_text.get_rect(topleft=k_vector(1, (victory_x, victory_y)))
@@ -325,8 +327,8 @@ class Game():
                     pontos = remaining_time * 2 + moedas * 50
                     pontuacao_ = True
                 # Determinar posição para pontuacao
-                pontuacao_x = self.player.rect_with_offset(self.scroll).right 
-                pontuacao_y = self.player.rect_with_offset(self.scroll).top - 60
+                pontuacao_x = self.player.get_rect_with_offset(self.scroll).right 
+                pontuacao_y = self.player.get_rect_with_offset(self.scroll).top - 60
                 # Renderizar pontuacao
                 pontuacao_font = pygame.font.Font(None, 18)
                 pontuacao_text = pontuacao_font.render(f"Pontuaçao: {pontos}", True, (255, 255, 255))
@@ -347,8 +349,8 @@ class Game():
             else:
                 if pygame.time.get_ticks() - start_time >= self.total_time:
                     self.movement = [False, False]
-                    lose_x = self.player.rect_with_offset(self.scroll).right + 20
-                    lose_y = self.player.rect_with_offset(self.scroll).top - 50
+                    lose_x = self.player.get_rect_with_offset(self.scroll).right + 20
+                    lose_y = self.player.get_rect_with_offset(self.scroll).top - 50
                     lose_font = pygame.font.Font(None, 20)
                     lose_text = lose_font.render("Você não conseguirá chegar a tempo para a prova de cálculo", True, (0, 0, 0))
                     lose_rect = lose_text.get_rect(topleft=(lose_x, lose_y))
