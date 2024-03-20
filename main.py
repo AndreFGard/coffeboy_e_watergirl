@@ -39,15 +39,16 @@ class Game():
         self.back = pygame.image.load("data/images/clouds/cloud_1.png")
 
         # itens no mapa
-        item1 = Item(self, 'moeda', (80,50), ())
-        item2 = Item(self, 'grao_de_cafe', (100,50), ())
-        item3 = Item(self, 'grao_de_cafe', (120,50), ())
-        item4 = Item(self, 'agua_quente', (150, 150), ())
+        moeda = Item(self, 'moeda', (514,17), ())
+        cafes = (Item(self, 'grao_de_cafe', (830,85), ()), Item(self, 'grao_de_cafe', (608,-35), ()),)
+        agua  = Item(self, 'agua_quente', (1285, 17), ())
         speed_buff = Speed_buff(self, "raio", (140, 50), ())
-        jump_buff = Jump_buff(self, 'botas', (200, 50), ())
-        lose_game = Tea(self, 'moeda', (200, 200), ())
-        self.collectible_items = [*[Item(self, 'moeda', (80 - 25 * i,80), ()) for i in range(3)], item1, item2, item3, item4, lose_game, speed_buff, jump_buff]
-        self.victory_req = [item1, item2, item4]
+        jump_buffs = (Jump_buff(self, 'botas', (1100, 16), ()), Jump_buff(self, 'botas', (765, 0), ()), Jump_buff(self, 'botas', (484, 274), ()))
+        lose_game = Tea(self, 'tea', (200, 200), ())
+
+        posicoes_moedas = ((913,40), (1255,-61), (180, 192), (437, 274), (476, 274))
+        self.collectible_items = [*[Item(self, 'moeda', pos, ()) for pos in posicoes_moedas], moeda, agua, lose_game, speed_buff, *cafes, *jump_buffs]
+        self.victory_req = [moeda, cafes[1], agua]
 
         # música de fundo
         self.back_music = pygame.mixer.music.load('data/sfx/BackgroundMusic.mp3')
@@ -276,10 +277,15 @@ class Game():
                     self.collectible_items.remove(item)
                     break  # Sair do loop assim que um item for coletado
             
-            if "agua_quente" in self.inventory_types and "grao_de_cafe" in self.inventory_types and self.inventory_types.count("moeda") >= 3:
-                dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+            if "agua_quente" in self.inventory_types:
+                if self.inventory_types.count("grao_de_cafe") >= 2 and self.inventory_types.count("moeda") >= 3:
+                    dialog_message = "Ufa, consegui o café a tempo da prova de cálculo"
+                    Inventory.apagar_inventario(self)
+                    self.inventory_list = []
+                    cafe = Item(self, 'copo_de_cafe', (0,0), ())
+                    self.inventory.add_item_to_slot(cafe, 0)
 
-            if coletou_tudo(self) == True:
+            if coletou_tudo(self) == True and False:
                 Inventory.apagar_inventario(self)
                 self.inventory_list = []
                 cafe = Item(self, 'copo_de_cafe', (0,0), ())
