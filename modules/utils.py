@@ -98,3 +98,6 @@ def load_assets():
             'copo_de_cafe': load_image("buffs/coffee/00.png"),
             'copo_de_cafe/idle':Animation([pygame.transform.scale(load_image("buffs/coffee/00.png"), (17,17))]),
             }
+
+def get_pos_from_tilemap_pos(pos):
+    return k_vector(16, pos)
