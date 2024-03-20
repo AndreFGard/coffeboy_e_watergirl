@@ -1,6 +1,6 @@
 import pygame
 NEIGHBOR_OFFSET = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(0,0),(-1,1),(0,1),(1,1),]
-COLLIDABLE_TILE_TYPES = {"grass", "stone"}
+COLLIDABLE_TILE_TYPES = {"grass", "stone", "walls"}
 GAMEOVER_BLOCK_TYPES = {"tea"}
 from modules.utils import sum_vectors, k_vector
 import json
@@ -47,7 +47,7 @@ class Tilemap:
         newmap_filename = self.newmapname
         raiz = {}
         raiz['tile_size'] = self.tile_size
-        raiz['tilemap'] = self.tilemap
+        raiz['tilemap'] = dict(sorted(self.tilemap.items(), reverse=False, key=lambda tile:tile[1]['pos'][0]))
         raiz['offgrid'] = []
         with open(newmap_filename, "w") as file:
             json.dump(raiz, file)
