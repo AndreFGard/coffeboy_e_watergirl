@@ -303,17 +303,17 @@ class Game():
             if dialog_message: 
                 self.movement = [False, False] 
                 # Posição x é ajustada para a direita da cabeça do personagem
-                dialog_x = self.player.rect().right + 30
+                dialog_x = self.player.rect_with_offset(self.scroll).right + 30
                 # Posição y é ajustada para cima da cabeça do personagem
-                dialog_y = self.player.rect().top - 40
+                dialog_y = self.player.rect_with_offset(self.scroll).top - 40
                 # Renderiza a mensagem de diálogo na tela sem fundo
                 dialog_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 20)  # Defina a fonte e o tamanho da fonte
                 dialog_text = dialog_font.render(dialog_message, True, (255, 255, 255))  # Renderiza o texto
                 dialog_rect = dialog_text.get_rect(topleft=(dialog_x, dialog_y))  # Obtém o retângulo que envolve o texto
 
                 # isso era pra renderizar o texto de vitoria
-                victory_x = self.player.rect().right - 20
-                victory_y = self.player.rect().top - 80
+                victory_x = self.player.rect_with_offset(self.scroll).right - 20
+                victory_y = self.player.rect_with_offset(self.scroll).top - 80
                 victory_font = pygame.font.Font('./data/font/MadimiOne-Regular.ttf', 72)
                 victory_text = victory_font.render("Corra para Área II", True, (0, 0, 0))
                 victory_rect = victory_text.get_rect(topleft=k_vector(1, (victory_x, victory_y)))
@@ -325,8 +325,8 @@ class Game():
                     pontos = remaining_time * 2 + moedas * 50
                     pontuacao_ = True
                 # Determinar posição para pontuacao
-                pontuacao_x = self.player.rect().right 
-                pontuacao_y = self.player.rect().top - 60
+                pontuacao_x = self.player.rect_with_offset(self.scroll).right 
+                pontuacao_y = self.player.rect_with_offset(self.scroll).top - 60
                 # Renderizar pontuacao
                 pontuacao_font = pygame.font.Font(None, 18)
                 pontuacao_text = pontuacao_font.render(f"Pontuaçao: {pontos}", True, (255, 255, 255))
@@ -347,8 +347,8 @@ class Game():
             else:
                 if pygame.time.get_ticks() - start_time >= self.total_time:
                     self.movement = [False, False]
-                    lose_x = self.player.rect().right + 20
-                    lose_y = self.player.rect().top - 50
+                    lose_x = self.player.rect_with_offset(self.scroll).right + 20
+                    lose_y = self.player.rect_with_offset(self.scroll).top - 50
                     lose_font = pygame.font.Font(None, 20)
                     lose_text = lose_font.render("Você não conseguirá chegar a tempo para a prova de cálculo", True, (0, 0, 0))
                     lose_rect = lose_text.get_rect(topleft=(lose_x, lose_y))
