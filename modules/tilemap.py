@@ -88,7 +88,7 @@ class Tilemap:
             #nao é a melhor otimizacoa, no youtube deve ter coisa melhor
             tile = self.tilemap[loc]
             tile_x, tile_y = tile['pos'] 
-            if tile_x >= start_screen_x  and tile_x <= end_screen_x:
+            if tile_x >= start_screen_x - self.tile_size  and tile_x <= end_screen_x:
                 #pegar a imagem dos assets daquele tipo (grass):  tile['type]
                 #pegar a imagem de numero = variant (1) desta lista
                 # e desenhá-la na tela
