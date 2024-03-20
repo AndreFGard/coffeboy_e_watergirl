@@ -93,6 +93,7 @@ def load_assets():
             'raio': load_image("buffs/lightning/00.png"),
             'raio/idle':Animation([pygame.transform.scale(load_image("buffs/lightning/00.png"), (17,17))]),
             'walls': load_images("tiles/walls"),
+            'tea/idle':Animation(load_images('entities/tea/idle')),
 
             'copo_de_cafe': load_image("buffs/coffee/00.png"),
             'copo_de_cafe/idle':Animation([pygame.transform.scale(load_image("buffs/coffee/00.png"), (17,17))]),
