@@ -2,7 +2,7 @@ import pygame
 import sys
 
 from modules.entities import PhysicsEntity, Player
-from modules.utils import load_image, load_images, Animation, subtract_vectors, k_vector,sum_vectors, distance
+from modules.utils import load_image, load_images, Animation, subtract_vectors, k_vector,sum_vectors, distance,load_assets
 from modules.tilemap import Tilemap
 
 
@@ -24,20 +24,8 @@ class Game():
         self.movement = [False, False]
 
         #loads the images as a list of assets containing every variant of that type
-        self.assets = {
-            'decor': load_images('tiles/decor'),
-            'grass': load_images('tiles/grass'),
-            'large_decor': load_images('tiles/large_decor'),
-            'stone': load_images('tiles/stone'),
-            'tea': load_images('tiles/tea'),
-            'player': load_image('entities/player/idle/00.png'),
-            'background': load_image("Background2.png"),
-            'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
-            'player/run': Animation(load_images('entities/player/run'), img_dur=4),
-            'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
-            'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4)
-            }
+        self.assets = load_assets()
+
         #print(self.assets)
         self.player = Player(self, (0, 0), (8, 15))
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16, newmapname="data/maps/0.json")
@@ -74,6 +62,7 @@ class Game():
         clock = pygame.time.Clock()
         a = False
         selected_tile = {}
+
         while True:
             #self.display.fill((200,200,255))
             self.display.blit(self.assets['background'], (0,0))
@@ -144,6 +133,11 @@ class Game():
 
                 self.display.blit(block_caption, subtract_vectors(self.get_mouse_pos(), self.scroll))
                 #pygame.draw.rect(self.display, (255,0,0), (*subtract_vectors(self.get_mouse_pos(), self.scroll),10, 16))
+            else:
+                font_path = './data/font/MadimiOne-Regular.ttf'
+                font = pygame.font.Font(font_path, 15)
+                block_caption = block_caption = font.render(f"{sum_vectors((1,1), tuple(map(int,self.get_pos_at_tilemap(self.get_mouse_pos()).split(';'))))}", True, (48, 39, 32))
+                self.display.blit(block_caption, subtract_vectors(self.get_mouse_pos(), self.scroll))
 
             pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
 

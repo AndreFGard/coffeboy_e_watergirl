@@ -3,7 +3,7 @@ import pygame
 import sys
 
 from modules.entities import PhysicsEntity, Player, Itemcoletavel, Speed_buff, Jump_buff, k_vector, Tea
-from modules.utils import load_image, load_images, distance, subtract_vectors, Animation
+from modules.utils import load_image, load_images, distance, subtract_vectors, Animation, load_assets
 from modules.tilemap import Tilemap
 from modules.hud import Item, InventorySlot, Inventory, pause_menu
 
@@ -32,33 +32,7 @@ class Game():
         self.movement = [False, False]
 
         # carrega as imagens como uma lista contendo todas as variantes desse tipo        
-        self.assets = {
-            'decor': load_images('tiles/decor'),
-            'grass': load_images('tiles/grass'),
-            'large_decor': load_images('tiles/large_decor'),
-            'stone': load_images('tiles/stone'),
-            'tea' : load_images('tiles/tea'),
-            'player': load_image("entities/player/idle/00.png"),
-            'background': load_image("Background2.png"),
-            'player/idle': Animation(load_images('entities/player/idle'), img_dur=6),
-            'player/run': Animation(load_images('entities/player/run'), img_dur=4),
-            'player/slide': Animation(load_images('entities/player/slide'), img_dur=4),
-            'player/jump': Animation(load_images('entities/player/jump'), img_dur=4),
-            'player/wall_slide': Animation(load_images('entities/player/wall_slide'), img_dur=4),
-            'moeda/idle': Animation(load_images("coins"), img_dur=4),
-            'moeda': load_image("coins/00.png"),
-            'grao_de_cafe': load_image("hud/inventory/coffee_beans/00.png"),
-            'grao_de_cafe/idle':Animation([pygame.transform.scale(load_image("hud/inventory/coffee_beans/00.png"), (17,17))]),
-            'agua_quente': load_image("hud/inventory/water_cup/00.png"),
-            'agua_quente/idle':Animation([pygame.transform.scale(load_image("hud/inventory/water_cup/00.png"), (17,17))]),
-            'botas': load_image("buffs/boots/00.png"),
-            'botas/idle':Animation([pygame.transform.scale(load_image("buffs/boots/00.png"), (17,17))]),
-            'raio': load_image("buffs/lightning/00.png"),
-            'raio/idle':Animation([pygame.transform.scale(load_image("buffs/lightning/00.png"), (17,17))]),
-            
-            'copo_de_cafe': load_image("buffs/coffee/00.png"),
-            'copo_de_cafe/idle':Animation([pygame.transform.scale(load_image("buffs/coffee/00.png"), (17,17))]),
-            }
+        self.assets = load_assets()
 
         self.player = Player(self, (50, 50), ())
         self.tilemap = Tilemap(self, map_filename="data/maps/0.json", tile_size=16)
