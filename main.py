@@ -287,12 +287,6 @@ class Game():
                     cafe = Item(self, 'copo_de_cafe', (0,0), ())
                     self.inventory.add_item_to_slot(cafe, 0)
 
-            if coletou_tudo(self) == True and False:
-                Inventory.delete_inventory(self)
-                self.inventory_list = []
-                cafe = Item(self, 'copo_de_cafe', (0,0), ())
-                self.inventory.add_item_to_slot(cafe, 0)
-
             #atualizar os buffs
             for i,buff in enumerate(self.active_buffs):
                 #se o buff nao estiver mais ativo, removê-lo
@@ -351,7 +345,7 @@ class Game():
                     self.movement = [False, False]
                     lose_x = self.player.get_rect_with_offset(self.scroll).right + 20
                     lose_y = self.player.get_rect_with_offset(self.scroll).top - 50
-                    lose_font = pygame.font.Font(None, 20)
+                    lose_font = pygame.font.Font(None, 72)
                     lose_text = lose_font.render("Você não conseguirá chegar a tempo para a prova de cálculo", True, (0, 0, 0))
                     lose_rect = lose_text.get_rect(topleft=(lose_x, lose_y))
                     
