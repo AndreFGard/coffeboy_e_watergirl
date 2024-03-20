@@ -33,7 +33,7 @@ class Game():
         #esse é o offset da camera
         self.scroll = [0,0]
         self.shift_pressed = False
-        self.player.movement_multiplier = 4
+        #self.player.movement_multiplier = 4
         #preparar o background
         self.assets['background'] = pygame.transform.scale(self.assets['background'], self.display.get_size())
 
@@ -62,6 +62,10 @@ class Game():
         clock = pygame.time.Clock()
         a = False
         selected_tile = {}
+        self.player.movement_multiplier = 3
+
+        blocos_ja_pegados = []
+        bloco_indice = 0
 
         while True:
             #self.display.fill((200,200,255))
@@ -83,6 +87,10 @@ class Game():
                     self.tilemap.__dump_map__()
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEWHEEL:
+                    bloco_indice -= 1
+                    selected_tile = blocos_ja_pegados[bloco_indice].copy()
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         self.movement[0] = True
@@ -113,6 +121,8 @@ class Game():
                         
                     mouse_pos = self.get_mouse_pos()
                     selected_tile = self.get_tile_at_pos(mouse_pos)
+                    blocos_ja_pegados.append(selected_tile)
+                    #print(blocos_ja_pegados)
                     if selected_tile:
                         if event.button == 3:
                             #clique direito
@@ -136,8 +146,15 @@ class Game():
             else:
                 font_path = './data/font/MadimiOne-Regular.ttf'
                 font = pygame.font.Font(font_path, 15)
-                block_caption = block_caption = font.render(f"{sum_vectors((1,1), tuple(map(int,self.get_pos_at_tilemap(self.get_mouse_pos()).split(';'))))}", True, (48, 39, 32))
+
+                position_in_tilemap = sum_vectors((1,1), tuple(map(int,self.get_pos_at_tilemap(self.get_mouse_pos()).split(';'))))
+                block_caption = block_caption = font.render(f"{position_in_tilemap}", True, (48, 39, 32))
                 self.display.blit(block_caption, subtract_vectors(self.get_mouse_pos(), self.scroll))
+
+                #coordenada no jogo
+                font = pygame.font.Font(font_path, 12)
+                block_caption = block_caption = font.render(f"{sum_vectors((1,1), tuple(self.get_mouse_pos()))}", True, (0, 39, 32))
+                self.display.blit(block_caption, sum_vectors((1,16), subtract_vectors(self.get_mouse_pos(), self.scroll)))
 
             pygame.draw.rect(self.display, (255,0,0), (self.player_x, self.player_y, 10, 16))
 
