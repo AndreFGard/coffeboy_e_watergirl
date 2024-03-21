@@ -11,10 +11,10 @@
      * etc
 3. baixe as dependências - apenas o pacote ``pygame``, **por enquanto**:
    * Ubuntu/debian:
-   * ``pip install -r requirements.txt`` 
+   * ``pip install pygame`` 
   *<details>
     *<summary>Archlinux e outras distros bleeding-edge</summary>
     *<br>
      Pode ser necessario instalar o modulo venv através do seu gerenciador de pacotes antes de executar este comando.
-     ``python -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt``
+     ``python -m venv .venv && source .venv/bin/activate && pip install pygame``
   *</details>
