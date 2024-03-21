@@ -91,6 +91,7 @@ class Game():
     def reviver(self):
         self.player.pos = [50,50]
         # se vc joga mal, eu espero que você tenha bastante memória 
+        self.death_sound.play()
         Game().run()
 
 
@@ -359,7 +360,7 @@ class Game():
                         pygame.quit()
                         sys.exit()
     
-            if self.player.pos[1] < 500:
+            if self.player.pos[1] > 500:
                 self.reviver()
 
             for event in pygame.event.get():
