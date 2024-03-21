@@ -60,6 +60,7 @@ class Game():
         self.coffee_sound = pygame.mixer.Sound('data/sfx/coffee_sound.wav')
         self.coin_sound = pygame.mixer.Sound('data/sfx/moeda_sound.wav')
         self.collect_sound = pygame.mixer.Sound('data/sfx/coleta_sound.wav')
+        self.death_sound = pygame.mixer.Sound('data/sfx/ehtrivial.mp3')
 
         # inventário
         slot1 = InventorySlot(100, 800)
@@ -90,6 +91,7 @@ class Game():
     def reviver(self):
         self.player.pos = [50,50]
         # se vc joga mal, eu espero que você tenha bastante memória 
+        self.death_sound.play()
         Game().run()
 
 
@@ -358,6 +360,9 @@ class Game():
                         pygame.quit()
                         sys.exit()
     
+            if self.player.pos[1] > 500:
+                self.reviver()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
