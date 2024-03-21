@@ -44,7 +44,7 @@ class Game():
         moeda = Item(self, 'moeda', (514,17), ())
         cafes = (Item(self, 'grao_de_cafe', (830,85), ()), Item(self, 'grao_de_cafe', (608,-35), ()),)
         agua  = Item(self, 'agua_quente', (1285, 17), ())
-        speed_buff = Speed_buff(self, "raio", (140, 50), ())
+        speed_buff = Speed_buff(self, "raio", (605, 81), ())
         jump_buffs = (Jump_buff(self, 'botas', (1100, 16), ()), Jump_buff(self, 'botas', (765, 0), ()), Jump_buff(self, 'botas', (484, 274), ()))
         chas_mortais = [Tea(self, 'tea', (get_pos_from_tilemap_pos(pos)), ()) for pos in self.tilemap.chas_posicoes]
 
