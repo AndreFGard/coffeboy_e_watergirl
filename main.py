@@ -228,7 +228,9 @@ class Game():
 
             #atualizar a posicao do player e renderizá-lo
             self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
-            pygame.draw.rect(self.display, (255,100,0), self.player.get_rect_with_offset(self.scroll))
+
+            #hitbox pra debug
+            #pygame.draw.rect(self.display, (255,100,0), self.player.get_rect_with_offset(self.scroll))
 
             self.player.render(self.display, offset=self.scroll) 
 
@@ -247,7 +249,7 @@ class Game():
             # TODO: otimizar isso com algo semelhante aos tilemap.physics_rects_around
             for item in self.collectible_items:
                 # desenhar area de colisao
-                pygame.draw.rect(self.display, (255, 100, 0), item.get_rect_with_offset(self.scroll))
+                #pygame.draw.rect(self.display, (255, 100, 0), item.get_rect_with_offset(self.scroll))
                 item.update(self.tilemap)
                 item.render(self.display, self.scroll)
 
@@ -367,7 +369,9 @@ class Game():
                     elif event.key == pygame.K_RIGHT:
                         self.movement[1] = True
                     elif event.key == pygame.K_UP:
-                        self.player.velocity[1] = self.player.velocidade_pulo
+                        if self.player.jump_count < self.player.jumps:
+                            self.player.velocity[1] = self.player.velocidade_pulo
+                            self.player.jump_count += 1
                         
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT:

@@ -120,6 +120,8 @@ class Player(PhysicsEntity):
         super().__init__(game, 'player', pos, size)
 
         #tempo que passou no ar
+        self.jumps = 1
+        self.jump_count = 0
         self.air_time = 0
 
     def update(self, tilemap, movement=(0,0)):
@@ -128,6 +130,7 @@ class Player(PhysicsEntity):
         self.air_time += 1
         if self.collisions['down']:
             self.air_time = 0
+            self.jump_count = 0
 
         if self.air_time > 4:
             self.set_action('jump')
