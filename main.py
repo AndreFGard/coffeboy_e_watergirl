@@ -340,7 +340,7 @@ class Game():
                 # contador_text = contador_font.render(f"contador: {contador}", True, (0, 0, 0))
                 # contador_rect = contador_text.get_rect(topleft=(contador_x, contador_y))
                 # self.display.blit(contador_text, contador_rect.topleft)
-                if contador >= 300:
+                if contador >= 700:
                     pygame.quit()
                     sys.exit()
             # coloquei esse else pq essa mensagem de derrota apareca bem no final antes de fechar o programa quando ganhava
@@ -355,8 +355,8 @@ class Game():
                     
                     contador +=1
                     fim = True
-                    if contador >= 200:
-                        self.RESTART = True
+                    if contador >= 700:
+                        self.reviver()
                         pygame.quit()
                         sys.exit()
     
