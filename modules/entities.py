@@ -168,7 +168,7 @@ class Buff(Itemcoletavel):
         #se o buff esta sendo aplicado agora
         self.applying = False
         #tempo em frames durante o qual o target sera afetado pelo buff
-        self.validity = 7 * 60
+        self.validity = 6 * 60
 
 class Speed_buff(Buff):
     def __init__(self, game, tipo, posicao, tamanho, pontuacao=10):
@@ -205,7 +205,7 @@ class Jump_buff(Buff):
         #se o buff esta sendo aplicado agora
         self.applying = False
         #tempo em frames durante o qual o target sera afetado pelo buff
-        self.validity = 10 * 60
+        self.validity = 7 * 60
 
     def apply_to_target(self, target:PhysicsEntity):
         """Apenas um exemplo do que um buff faria a um jogador"""
