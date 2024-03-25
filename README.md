@@ -1,20 +1,8 @@
-# pygame
+Projeto de IP 2023.2
 
-#### Índice
-1. [Desenvolvimento](#Desenvolvimento)
+- Título: Café na Área II (sim, é diferente do nome do repositório)
+- Membros: André Saghaard - afs15, Bianca Paes - bpas, Fátima Regina - frqal, Paula Nóbrega - pncg, Rodrigo Rêgo  - rgar, Wenderson Juvenal - wjls
 
-## Desenvolvimento
-1. Clone o repositorio com o comando ``git clone https://github.com/AndreFGard/erm.git``
-2. É necessário instalar o pip. No linux, é possível fazer isso com um dos seguintes comandos:
-     * ``sudo apt install python3-pip``
-     * ``sudo pacman -S python-pip``
-     * etc
-3. baixe as dependências - apenas o pacote ``pygame``, **por enquanto**:
-   * Ubuntu/debian:
-   * ``pip install pygame`` 
-  *<details>
-    *<summary>Archlinux e outras distros bleeding-edge</summary>
-    *<br>
-     Pode ser necessario instalar o modulo venv através do seu gerenciador de pacotes antes de executar este comando.
-     ``python -m venv .venv && source .venv/bin/activate && pip install pygame``
-  *</details>
+- Organização do projeto: o projeto foi dividido em 7 diretórios diferentes: main, data, modules, pyguix, editor_niveis, CHANGELOG e o README que estás a ler agora, conforme ilustrado no fluxograma presente no slide do projeto
+
+- ![alt text]( "Title")
