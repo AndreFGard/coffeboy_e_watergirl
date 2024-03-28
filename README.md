@@ -21,7 +21,7 @@ git clone https://github.com/AndreFGard/coffeboy_e_watergirl && cd coffeboy_e_wa
 pip install pygame
 python3 main.py
 ```
-- em distribuições como o Arch Linux, Fedora e Ubuntu (na sua versão mais recente) pode ser necessário criar, antes de instalar o pygame, um venv:
+- em distribuições Linux como o Arch Linux, Fedora e Ubuntu (na sua versão mais recente) pode ser necessário criar, antes de instalar o pygame, um *python virtual environment* (venv):
 ```shell
 python -m venv .venv
 source .venv/bin/activate
@@ -41,7 +41,7 @@ Pygame, GitHub, VSCode, Piskel (para a personalização de sprites), pyguix (bib
 
 ## Divisão do trabalho:
 
-### André Saghaard <afs15>:
+### André Freitas <afs15>:
 mapa, editor de mapa,
 esqueleto do jogo (incluindo a leitura e carregamento do arquivo do mapa), renderização do mapa, render do personagem, colisões com o terreno, movimentação,
 sistema básico de buffs (coletáveis interativos),
@@ -74,7 +74,7 @@ dicionário nos assets, os conceitos de P.O.O., condicionais nas funções, laç
   - Com unanimidade, o maior desafio encontrado foi conciliar o projeto com as outras matérias]
   - Além disso, a aprendizagem de P.O.O., Pygame e Git/GitHub
   - Conflitos de merge e gerenciamento de branches
-  - Variados bugs que apareceram no meio do caminho, principalmente os relacionados a sprites e colisões 
+  - Varios bugs que apareceram no meio do caminho, principalmente os relacionados a sprites e colisões 
 
 
   
