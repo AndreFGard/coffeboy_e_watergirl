@@ -6,15 +6,35 @@
 
 ## Membros: 
 
-André Saghaard - afs15;    
+André Freitas - afs15;    
 Bianca Paes - bpas;  
 Fátima Regina - frqal;  
 Paula Nóbrega - pncg;  
 Rodrigo Rego  - rgar;  
 Wenderson Juvenal - wjls.
 
+
+## Execução do código
+### Linux, MacOS e outros unix-like
+```shell
+git clone https://github.com/AndreFGard/coffeboy_e_watergirl && cd coffeboy_e_watergirl
+pip install pygame
+python3 main.py
+```
+- em distribuições como o Arch Linux, Fedora e Ubuntu (na sua versão mais recente) pode ser necessário criar, antes de instalar o pygame, um venv:
+```shell
+python -m venv .venv
+source .venv/bin/activate
+```
+### Windows
+- É necessário instalar o python, o git e o pip. Depois:
+```cmd
+git clone https://github.com/AndreFGard/coffeboy_e_watergirl
+cd coffeboy_e_watergirl
+```
+
 ## Organização do projeto: 
-o projeto foi dividido em 7 diretórios diferentes: main, data, modules, pyguix, editor_niveis, CHANGELOG e o README que estás a ler agora, conforme ilustrado no fluxograma presente no slide do projeto
+o projeto foi dividido em 7 diretórios diferentes: main, data, modules, pyguix, editor_niveis, CHANGELOG e o README que estás a ler agora, conforme ilustrado no fluxograma presente no slide do projeto. Os diretórios contêm arquivos nos quais se encontram os assets e classes que o jogo utiliza. Por exemplo, no diretório *modules*, encontram-se arquivos como *entities.py e tilemap.py*, os quais, respectivamente, contêm classes relativas às entidades às quais se aplica física e colisões e o tilemap, que carrega e renderiza o mapa.
 
 ## Ferramentas: 
 Pygame, GitHub, VSCode, Piskel (para a personalização de sprites), pyguix (biblioteca usada para a construção do menu de pausa)
